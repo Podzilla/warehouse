@@ -1,5 +1,4 @@
 package com.podzilla.warehouse.model;
-import com.podzilla.warehouse.model.ordering.OrderedItem;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,10 +24,10 @@ public class Item {
     @Column(nullable = false)
     private int stockQuantity;
 
-    @ManyToOne
-    @JoinColumn(name = "warehouse_manager_id", nullable = false)
-    @ToString.Exclude
-    private WarehouseManager warehouseManager;
+//    @ManyToOne
+//    @JoinColumn(name = "warehouse_manager_id", nullable = false)
+//    @ToString.Exclude
+//    private WarehouseManager warehouseManager;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude

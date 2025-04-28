@@ -1,7 +1,5 @@
-package com.podzilla.warehouse.model.ordering;
+package com.podzilla.warehouse.model;
 
-import com.podzilla.warehouse.model.Item;
-import com.podzilla.warehouse.model.packing.Packager;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,8 +25,8 @@ public class OrderedItem {
     @ToString.Exclude
     private Item item;
 
-    @ManyToOne
-    @JoinColumn(name = "packager_id")
-    @ToString.Exclude
-    private Packager packager;
+//    @ManyToOne
+//    @JoinColumn(name = "packager_id")
+//    @ToString.Exclude
+//    private Packager packager;
 }
