@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  warehouse-backend:
+    image: openjdk:25-ea-4-jdk-oraclelinux9
+    ports:
+      - "${APP_PORT}:8080"
+    depends_on:
+      - warehouse_db
+      - redis
+      - rabbitmq
+    env_file:
+      - .env
+    volumes:
+      - ./target/warehouse-0.0.1-SNAPSHOT.jar:/app/warehouse-0.0.1-SNAPSHOT.jar
+      - ./logs:/logs
+    command: [ "java", "-jar", "/app/warehouse-0.0.1-SNAPSHOT.jar" ]
+
+  warehouse_db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: warehouse
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "${DB_PORT}:5432"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "${REDIS_PORT}:6379"
+    expose:
+      - "9121"
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - "${REDIS_INSIGHT_PORT}:8001"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "${RABBITMQ_AMQP_PORT}:5672"
+      - "${RABBITMQ_UI_PORT}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "${LOKI_PORT}:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yaml
+      - ./logs:/logs
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "${GRAFANA_PORT}:3000"
+    depends_on:
+      - loki
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "${PROMETHEUS_PORT}:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
