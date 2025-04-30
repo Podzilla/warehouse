@@ -3,9 +3,9 @@ spring:
     name: warehouse
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/warehouse_db
+    username: warehouse_user
+    password: warehouse_pass
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,10 +18,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   rabbitmq:
-    host: ${SPRING_RABBITMQ_HOST}
+    host: localhost
     port: 5672
-    username: ${SPRING_RABBITMQ_USERNAME}
-    password: ${SPRING_RABBITMQ_PASSWORD}
+    username: guest
+    password: guest
     listener:
       simple:
         retry:
@@ -38,7 +38,7 @@ spring:
 
   data:
     redis:
-      host: ${SPRING_DATA_REDIS_HOST}
+      host: localhost
       port: 6379
       timeout: 6000
 
