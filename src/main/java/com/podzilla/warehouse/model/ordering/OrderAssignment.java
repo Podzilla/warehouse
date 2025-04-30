@@ -1,4 +1,4 @@
-package com.podzilla.warehouse.model;
+package com.podzilla.warehouse.model.ordering;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PackedOrder {
+public class OrderAssignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,7 +21,7 @@ public class PackedOrder {
     private String status;
 
 //    @ManyToOne
-//    @JoinColumn(name = "order_assigner_id")
+//    @JoinColumn(name = "courier_id")
 //    @ToString.Exclude
-//    private OrderAssigner orderAssigner;
+//    private Courier courier;
 }
