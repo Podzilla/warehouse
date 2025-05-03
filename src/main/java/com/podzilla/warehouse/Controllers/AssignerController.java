@@ -1,18 +1,15 @@
 package com.podzilla.warehouse.Controllers;
 
-import com.podzilla.warehouse.Models.AssignedOrders;
-import com.podzilla.warehouse.Services.AssignerService;
+import com.podzilla.warehouse.Services.AssignedOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/Assign")
 public class AssignerController {
 
     @Autowired
-    private AssignerService assignerService;
+    private AssignedOrdersService assignerService;
 
 //    @PostMapping("/assignOrder")
 //    public AssignedOrders assignOrder(@RequestBody AssignedOrders assignedOrders) {
