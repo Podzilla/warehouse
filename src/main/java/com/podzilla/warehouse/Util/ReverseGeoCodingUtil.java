@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class ReverseGeoCodingUtil {
 
-    @Value("${opencage.api.key}")
+    @Value("${spring.opencage.api.key}")
     private String apiKey;
 
     private final String GEOCODE_URL = "https://api.opencagedata.com/geocode/v1/json?q={lat},{lng}&key={key}";

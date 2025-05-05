@@ -50,4 +50,4 @@ spring:
       enabled: true
   opencage:
     api:
-      key: ${OPENCAGE_API_KEY}
+      key: c9d911df5f8149e39d1de52c09591c37
