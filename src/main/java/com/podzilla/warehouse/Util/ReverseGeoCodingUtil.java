@@ -1,4 +1,4 @@
-package com.podzilla.warehouse.util;
+package com.podzilla.warehouse.Util;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
