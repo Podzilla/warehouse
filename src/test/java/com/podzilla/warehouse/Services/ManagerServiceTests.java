@@ -101,7 +101,7 @@ public class ManagerServiceTests {
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertTrue(result.get(0).getIsActive());
+        assertTrue(result.getFirst().getIsActive());
         verify(managerRepository, times(1)).findByIsActiveTrue();
     }
 
@@ -119,7 +119,7 @@ public class ManagerServiceTests {
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertFalse(result.get(0).getIsActive());
+        assertFalse(result.getFirst().getIsActive());
         verify(managerRepository, times(1)).findByIsActiveFalse();
     }
 
@@ -176,7 +176,7 @@ public class ManagerServiceTests {
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Logistics", result.get(0).getDepartment());
+        assertEquals("Logistics", result.getFirst().getDepartment());
         verify(managerRepository, times(1)).findByDepartment("Logistics");
     }
 
