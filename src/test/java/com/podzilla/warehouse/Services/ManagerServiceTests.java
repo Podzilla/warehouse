@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,7 +93,7 @@ public class ManagerServiceTests {
     @Test
     public void testGetActiveManagers() {
         // Arrange
-        List<Manager> activeManagers = Arrays.asList(testManager);
+        List<Manager> activeManagers = Collections.singletonList(testManager);
         when(managerRepository.findByIsActiveTrue()).thenReturn(activeManagers);
 
         // Act
@@ -110,7 +111,7 @@ public class ManagerServiceTests {
         // Arrange
         Manager inactiveManager = new Manager("Inactive", "inactive@example.com", "Warehouse");
         inactiveManager.setIsActive(false);
-        List<Manager> inactiveManagers = Arrays.asList(inactiveManager);
+        List<Manager> inactiveManagers = List.of(inactiveManager);
         when(managerRepository.findByIsActiveFalse()).thenReturn(inactiveManagers);
 
         // Act
@@ -167,7 +168,7 @@ public class ManagerServiceTests {
     @Test
     public void testGetManagersByDepartment() {
         // Arrange
-        List<Manager> departmentManagers = Arrays.asList(testManager);
+        List<Manager> departmentManagers = Collections.singletonList(testManager);
         when(managerRepository.findByDepartment("Logistics")).thenReturn(departmentManagers);
 
         // Act
