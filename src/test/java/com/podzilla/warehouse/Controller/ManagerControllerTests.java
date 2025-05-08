@@ -1,4 +1,4 @@
-package com.podzilla.warehouse.Controllers;
+package com.podzilla.warehouse.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.podzilla.warehouse.Models.Manager;
