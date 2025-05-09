@@ -2,6 +2,8 @@ package com.podzilla.warehouse.Services;
 
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Repositories.StockRepository;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+@Getter
+@Setter
 @Service
 public class StockService {
     @Autowired

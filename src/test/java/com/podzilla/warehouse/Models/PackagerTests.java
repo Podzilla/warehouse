@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PackagerTest {
+class PackagerTests {
 
     @Test
     void testDefaultConstructorAndSetters() {

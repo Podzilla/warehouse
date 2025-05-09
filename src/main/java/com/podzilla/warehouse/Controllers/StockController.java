@@ -2,6 +2,8 @@ package com.podzilla.warehouse.Controllers;
 
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Services.StockService;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
