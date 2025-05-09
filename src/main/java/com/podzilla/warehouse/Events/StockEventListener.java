@@ -48,7 +48,10 @@ public class StockEventListener {
                             item.getProductId(),
                             null,
                             stockRepository.findById(item.getProductId()).get().getQuantity() - item.getQuantity(),
+                            null,
+                            null,
                             null
+
                     )
             );
         }

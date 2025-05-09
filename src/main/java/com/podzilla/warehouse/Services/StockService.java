@@ -1,10 +1,14 @@
 package com.podzilla.warehouse.Services;
 
+import com.podzilla.warehouse.Events.InventorySnapshotEvent;
+import com.podzilla.warehouse.Events.ProductEvent;
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Repositories.StockRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,9 +18,25 @@ public class StockService {
     @Autowired
     private StockRepository stockRepository;
 
-    public Stock createStock(String name, Integer quantity, Integer threshold) {
-        Stock stock = new Stock(name, quantity, threshold);
-        return stockRepository.save(stock);
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    public Stock createStock(String name, Integer quantity, Integer threshold, String category, double cost) {
+        Stock stock = new Stock(name, quantity, threshold, category, cost);
+        Stock saved = stockRepository.save(stock);
+
+        ProductEvent event = new ProductEvent(
+                LocalDateTime.now(),
+                saved.getId(),
+                saved.getName(),
+                saved.getCategory(),
+                saved.getCost(),
+                saved.getThreshold()
+        );
+
+        rabbitTemplate.convertAndSend("analytics.exchange", "analytics.product.changed", event);
+
+        return saved;
     }
 
     public List<Stock> getAllStocks() {
@@ -39,14 +59,37 @@ public class StockService {
         return stockRepository.findByQuantityLessThanOrEqualToThreshold();
     }
 
-    public Optional<Stock> updateStock(UUID id, String name, Integer quantity, Integer threshold) {
+    public Optional<Stock> updateStock(UUID id, String name, Integer quantity, Integer threshold, String category, Double cost) {
         return stockRepository.findById(id)
                 .map(stock -> {
                     if (name != null) stock.setName(name);
                     if (quantity != null) stock.setQuantity(quantity);
                     if (threshold != null) stock.setThreshold(threshold);
-                    return stockRepository.save(stock);
+                    if (category != null) stock.setCategory(category);
+                    if (cost != null) stock.setCost(cost);
+
+                    Stock updated = stockRepository.save(stock);
+
+                    ProductEvent event = new ProductEvent(
+                            LocalDateTime.now(),
+                            updated.getId(),
+                            updated.getName(),
+                            updated.getCategory(),
+                            updated.getCost(),
+                            updated.getThreshold()
+                    );
+                    rabbitTemplate.convertAndSend("analytics.exchange", "analytics.product.changed", event);
+
+                    return updated;
                 });
+    }
+
+    public InventorySnapshotEvent generateSnapshot(UUID warehouseId) {
+        List<InventorySnapshotEvent.ProductSnapshot> productSnapshots = stockRepository.findAll().stream()
+                .map(stock -> new InventorySnapshotEvent.ProductSnapshot(stock.getId(), stock.getQuantity()))
+                .toList();
+
+        return new InventorySnapshotEvent(LocalDateTime.now(), warehouseId, productSnapshots);
     }
 
     public boolean deleteStock(UUID id) {

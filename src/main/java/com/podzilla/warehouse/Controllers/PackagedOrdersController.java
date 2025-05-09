@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/package")
@@ -17,13 +18,13 @@ public class PackagedOrdersController {
     private PackagedOrdersService packagedOrdersService;
 
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<List<PackagedOrders>> getByOrderId(@PathVariable Long orderId) {
+    public ResponseEntity<List<PackagedOrders>> getByOrderId(@PathVariable UUID orderId) {
         Optional<List<PackagedOrders>> packagedOrders = packagedOrdersService.findByOrderId(orderId);
         return packagedOrders.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/packager/{packagerId}")
-    public ResponseEntity<List<PackagedOrders>> getByPackagerId(@PathVariable Long packagerId) {
+    public ResponseEntity<List<PackagedOrders>> getByPackagerId(@PathVariable UUID packagerId) {
         Optional<List<PackagedOrders>> packagedOrders = packagedOrdersService.findByPackagerId(packagerId);
         return packagedOrders.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -35,7 +36,7 @@ public class PackagedOrdersController {
     }
 
     @PostMapping
-    public ResponseEntity<PackagedOrders> packageOrder(@RequestParam Long orderId, @RequestParam Long packagerId) {
+    public ResponseEntity<PackagedOrders> packageOrder(@RequestParam UUID orderId, @RequestParam UUID packagerId) {
         PackagedOrders packagedOrder = packagedOrdersService.packageOrder(orderId, packagerId);
         return ResponseEntity.ok(packagedOrder);
     }

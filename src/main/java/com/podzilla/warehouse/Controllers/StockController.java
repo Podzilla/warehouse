@@ -1,5 +1,6 @@
 package com.podzilla.warehouse.Controllers;
 
+import com.podzilla.warehouse.Events.InventorySnapshotEvent;
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,11 @@ public class StockController {
     // Create
     @PostMapping
     public ResponseEntity<Stock> createStock(@RequestParam String name,
-                                            @RequestParam Integer quantity,
-                                            @RequestParam Integer threshold) {
-        Stock stock = stockService.createStock(name, quantity, threshold);
+                                             @RequestParam Integer quantity,
+                                             @RequestParam Integer threshold,
+                                             @RequestParam String category,
+                                             @RequestParam Double cost) {
+        Stock stock = stockService.createStock(name, quantity, threshold, category, cost);
         return ResponseEntity.status(HttpStatus.CREATED).body(stock);
     }
 
@@ -58,13 +61,22 @@ public class StockController {
         return stocks.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(stocks);
     }
 
+    // Snapshot for Analytics Service
+    @GetMapping("/snapshot")
+    public ResponseEntity<InventorySnapshotEvent> getInventorySnapshot(@RequestParam UUID warehouseId) {
+        InventorySnapshotEvent snapshot = stockService.generateSnapshot(warehouseId);
+        return ResponseEntity.ok(snapshot);
+    }
+
     // Update
     @PutMapping("/{id}")
     public ResponseEntity<Stock> updateStock(@PathVariable UUID id,
-                                           @RequestParam(required = false) String name,
-                                           @RequestParam(required = false) Integer quantity,
-                                           @RequestParam(required = false) Integer threshold) {
-        Optional<Stock> updatedStock = stockService.updateStock(id, name, quantity, threshold);
+                                             @RequestParam(required = false) String name,
+                                             @RequestParam(required = false) Integer quantity,
+                                             @RequestParam(required = false) Integer threshold,
+                                             @RequestParam(required = false) String category,
+                                             @RequestParam(required = false) Double cost) {
+        Optional<Stock> updatedStock = stockService.updateStock(id, name, quantity, threshold, category, cost);
         return updatedStock.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
