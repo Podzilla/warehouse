@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/Assign")
+@RequestMapping("warehouse/Assign")
 public class AssignerController {
 
     @Autowired

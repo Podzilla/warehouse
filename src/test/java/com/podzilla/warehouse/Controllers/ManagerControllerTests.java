@@ -1,7 +1,6 @@
-package com.podzilla.warehouse.Controller;
+package com.podzilla.warehouse.Controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.podzilla.warehouse.Controllers.ManagerController;
 import com.podzilla.warehouse.Models.Manager;
 import com.podzilla.warehouse.Services.ManagerService;
 import org.junit.jupiter.api.BeforeEach;
