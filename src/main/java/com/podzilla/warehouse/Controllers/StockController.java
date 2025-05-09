@@ -3,12 +3,13 @@ package com.podzilla.warehouse.Controllers;
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,8 +31,8 @@ public class StockController {
 
    // @PreAuthorize("hasRole('MANAGER')")
     @GetMapping
-    public ResponseEntity<List<Stock>> getAllStocks() {
-        List<Stock> stocks = stockService.getAllStocks();
+    public ResponseEntity<Page<Stock>> getAllStocks(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Stock> stocks = stockService.getAllStocks(pageable);
         return ResponseEntity.ok(stocks);
     }
 
@@ -44,22 +45,22 @@ public class StockController {
 
     //@PreAuthorize("hasAnyRole('MANAGER', 'ASSIGNER', 'PACKAGER')")
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<Stock>> getStocksByName(@PathVariable String name) {
-        List<Stock> stocks = stockService.getStocksByName(name);
+    public ResponseEntity<Page<Stock>> getStocksByName(@PathVariable String name, @PageableDefault(size = 10) Pageable pageable) {
+        Page<Stock> stocks = stockService.getStocksByName(name, pageable);
         return stocks.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(stocks);
     }
 
    // @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/below-quantity/{quantity}")
-    public ResponseEntity<List<Stock>> getStocksBelowQuantity(@PathVariable Integer quantity) {
-        List<Stock> stocks = stockService.getStocksBelowQuantity(quantity);
+    public ResponseEntity<Page<Stock>> getStocksBelowQuantity(@PathVariable Integer quantity, @PageableDefault(size = 10) Pageable pageable) {
+        Page<Stock> stocks = stockService.getStocksBelowQuantity(quantity, pageable);
         return stocks.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(stocks);
     }
 
     //@PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/below-threshold")
-    public ResponseEntity<List<Stock>> getStocksBelowThreshold() {
-        List<Stock> stocks = stockService.getStocksBelowThreshold();
+    public ResponseEntity<Page<Stock>> getStocksBelowThreshold(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Stock> stocks = stockService.getStocksBelowThreshold(pageable);
         return stocks.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(stocks);
     }
 

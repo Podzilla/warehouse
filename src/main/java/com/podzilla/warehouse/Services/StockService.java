@@ -3,6 +3,8 @@ package com.podzilla.warehouse.Services;
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Repositories.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,25 +21,26 @@ public class StockService {
         return stockRepository.save(stock);
     }
 
-    public List<Stock> getAllStocks() {
-        return stockRepository.findAll();
+    public Page<Stock> getAllStocks(Pageable pageable) {
+        return stockRepository.findAll(pageable);
     }
 
     public Optional<Stock> getStockById(UUID id) {
         return stockRepository.findById(id);
     }
 
-    public List<Stock> getStocksByName(String name) {
-        return stockRepository.findByName(name);
+    public Page<Stock> getStocksByName(String name, Pageable pageable) {
+        return stockRepository.findByName(name, pageable);
     }
 
-    public List<Stock> getStocksBelowQuantity(Integer quantity) {
-        return stockRepository.findByQuantityLessThanEqual(quantity);
+    public Page<Stock> getStocksBelowQuantity(Integer quantity, Pageable pageable) {
+        return stockRepository.findByQuantityLessThanEqual(quantity, pageable);
     }
 
-    public List<Stock> getStocksBelowThreshold() {
-        return stockRepository.findByQuantityLessThanOrEqualToThreshold();
+    public Page<Stock> getStocksBelowThreshold(Pageable pageable) {
+        return stockRepository.findByQuantityLessThanOrEqualToThreshold(pageable);
     }
+
 
     public Optional<Stock> updateStock(UUID id, String name, Integer quantity, Integer threshold) {
         return stockRepository.findById(id)
