@@ -9,6 +9,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("warehouse/package")
 public class PackagedOrdersController {
@@ -41,8 +43,8 @@ public class PackagedOrdersController {
 
     //@PreAuthorize("hasRole('PACKAGER')")
     @PostMapping
-    public ResponseEntity<PackagedOrders> packageOrder(@RequestParam Long orderId, @RequestParam Long packagerId) {
-        PackagedOrders packagedOrder = packagedOrdersService.packageOrder(orderId, packagerId);
+    public ResponseEntity<Optional<PackagedOrders>> packageOrder(@RequestParam Long orderId, @RequestParam Long packagerId) {
+        Optional<PackagedOrders> packagedOrder = packagedOrdersService.packageOrder(orderId, packagerId);
         return ResponseEntity.ok(packagedOrder);
     }
 }
