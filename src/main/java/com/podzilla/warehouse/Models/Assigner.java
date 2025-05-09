@@ -1,19 +1,17 @@
 package com.podzilla.warehouse.Models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Setter
+@Getter
 @Entity
-@Table(name = "Assignments")
+@Table(name = "Assigners")
 public class Assigner {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
 }
