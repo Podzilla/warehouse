@@ -2,6 +2,7 @@ package com.podzilla.warehouse.Models;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name = "Assignments")
 public class Assigner {
