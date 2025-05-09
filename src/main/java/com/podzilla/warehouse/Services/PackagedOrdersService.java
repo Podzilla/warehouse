@@ -26,8 +26,8 @@ public class PackagedOrdersService {
         return packagedOrdersRepository.findByPackagerIdIsNull(pageable);
     }
 
-    public PackagedOrders packageOrder(Long orderId, Long packagerId) {
+    public Optional<PackagedOrders> packageOrder(Long orderId, Long packagerId) {
         PackagedOrders packagedOrder = new PackagedOrders(orderId, packagerId);
-        return packagedOrdersRepository.save(packagedOrder);
+        return Optional.of(packagedOrdersRepository.save(packagedOrder));
     }
 }
