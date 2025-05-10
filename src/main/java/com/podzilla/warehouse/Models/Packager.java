@@ -16,7 +16,7 @@ public class Packager {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column
+    @Column(nullable = false)
     private boolean isActive = true;
 
     public Packager(String name) {

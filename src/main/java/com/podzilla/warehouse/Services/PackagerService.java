@@ -25,16 +25,16 @@ public class PackagerService {
         return packagerRepository.findById(id);
     }
 
-    public Packager createPackager(Packager packager) {
-        return packagerRepository.save(packager);
+    public Optional<Packager> createPackager(Packager packager) {
+        return Optional.of(packagerRepository.save(packager));
     }
 
-    public Packager updatePackager(Long id, Packager updated) {
-        return packagerRepository.findById(id).map(existing -> {
+    public Optional<Packager> updatePackager(Long id, Packager updated) {
+        return Optional.ofNullable(packagerRepository.findById(id).map(existing -> {
             existing.setName(updated.getName());
             existing.setActive(updated.isActive());
             return packagerRepository.save(existing);
-        }).orElseThrow(() -> new RuntimeException("Packager not found"));
+        }).orElseThrow(() -> new RuntimeException("Packager not found")));
     }
 
     public void deletePackager(Long id) {
