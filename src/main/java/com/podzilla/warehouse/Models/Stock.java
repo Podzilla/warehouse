@@ -56,6 +56,11 @@ public class Stock {
         this.price = cost;
     }
 
+    public Stock(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     public void setCost(Double cost) {
         this.price = cost;
     }
