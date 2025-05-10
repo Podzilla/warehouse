@@ -12,8 +12,8 @@ import java.util.UUID;
 
 @Entity
 @Setter
-@Getter
 @NoArgsConstructor
+@Getter
 @Table(name = "Stock")
 public class Stock {
     @Id
@@ -29,20 +29,44 @@ public class Stock {
     @Column(nullable = false)
     private Integer threshold;
 
+    @Column(nullable = false)
+    private Double price;
+
+    @Column(nullable = false)
+    private String category;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    
 
-    public Stock(String name, Integer quantity) {
-        this.name = name;
-        this.quantity = quantity;
-    }
     public Stock(String name, Integer quantity, Integer threshold) {
         this.name = name;
         this.quantity = quantity;
         this.threshold = threshold;
+    }
+
+    public Stock(String name, Integer quantity, Integer threshold, String category, double cost) {
+        this.name = name;
+        this.quantity = quantity;
+        this.threshold = threshold;
+        this.category = category;
+        this.price = cost;
+    }
+
+    public Stock(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+    public void setCost(Double cost) {
+        this.price = cost;
+    }
+
+    public double getCost() {
+        return this.price;
     }
 }

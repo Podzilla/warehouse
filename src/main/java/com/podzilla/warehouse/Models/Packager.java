@@ -17,13 +17,13 @@ public class Packager {
     @Column(nullable = false)
     private String name;
     @Column
-    private boolean active = true;
+    private boolean isActive = true;
 
     public Packager(String name) {
         this.name = name;
     }
-    public Packager(String name, boolean active) {
+    public Packager(String name, boolean isActive) {
         this.name = name;
-        this.active = active;
+        this.isActive = isActive;
     }
 }
