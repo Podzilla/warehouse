@@ -4,28 +4,40 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Entity
 @Setter
 @Getter
 @Table(name = "Assignments")
 public class AssignedOrders {
     @Id
-    private Long orderId;
+    private UUID orderId;
 
     @Column()
-    private Long assignerId;
+    private UUID assignerId;
 
     @Column()
-    private Long courierId;
+    private UUID courierId;
+
+    @Column()
+    private LocalDateTime assignedAt;
 
 
     public AssignedOrders() {}
 
-    public AssignedOrders(Long orderId, Long assignerId, Long courierId) {
+    public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId) {
         this.orderId = orderId;
         this.assignerId = assignerId;
         this.courierId = courierId;
     }
-    
-    
+
+
+    public AssignedOrders(UUID orderId, UUID taskId, UUID courierId, LocalDateTime now) {
+        this.orderId = orderId;
+        this.assignerId = taskId;
+        this.courierId = courierId;
+        this.assignedAt = now;
+    }
 }
