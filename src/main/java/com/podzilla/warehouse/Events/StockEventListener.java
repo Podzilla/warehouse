@@ -54,6 +54,15 @@ public class StockEventListener {
 
                     )
             );
+
+
+            // TODO: Emit event to Courier service
+//            CourierDispatchEvent courierEvent = new CourierDispatchEvent(event.getOrderId());
+//            rabbitTemplate.convertAndSend(
+//                    RabbitMQConfig.COURIER_EXCHANGE,
+//                    RabbitMQConfig.COURIER_ROUTING,
+//                    courierEvent
+//            );
         }
     }
 }
