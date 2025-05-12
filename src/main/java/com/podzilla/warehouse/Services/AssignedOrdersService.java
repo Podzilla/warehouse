@@ -23,7 +23,7 @@ public class AssignedOrdersService {
         return Optional.ofNullable(assignedOrdersRepository.findByOrderId(orderId));
     }
     
-    public Optional<List<AssignedOrders>> findByAssignerId(Long assignerId) {
+    public Optional<List<AssignedOrders>> findByAssignerId(UUID assignerId) {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerId(assignerId));
     }
     
@@ -31,7 +31,7 @@ public class AssignedOrdersService {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerIdIsNull());
     }
 
-    public AssignedOrders assignOrder(UUID orderId, Long AssignerID, UUID courierId) {
+    public AssignedOrders assignOrder(UUID orderId, UUID AssignerID, UUID courierId) {
         AssignedOrders assignment = new AssignedOrders(orderId, AssignerID, courierId);
         assignedOrdersRepository.save(assignment);
 

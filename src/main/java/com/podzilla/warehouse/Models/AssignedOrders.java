@@ -18,7 +18,7 @@ public class AssignedOrders {
     private UUID orderId;
 
     @Column()
-    private Long assignerId;
+    private UUID assignerId;
 
     @Column()
     private UUID courierId;
@@ -26,7 +26,7 @@ public class AssignedOrders {
     @Column()
     private LocalDateTime assignedAt;
 
-    public AssignedOrders(UUID orderId, Long assignerId, UUID courierId) {
+    public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId) {
         this.orderId = orderId;
         this.assignerId = assignerId;
         this.courierId = courierId;
@@ -34,7 +34,7 @@ public class AssignedOrders {
     }
 
 
-    public AssignedOrders(UUID orderId, Long assignerId, UUID courierId, LocalDateTime assignedAt) {
+    public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId, LocalDateTime assignedAt) {
         this.orderId = orderId;
         this.assignerId = assignerId;
         this.courierId = courierId;

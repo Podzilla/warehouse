@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface AssignedOrdersRepository extends JpaRepository<AssignedOrders, UUID> {
     List<AssignedOrders> findByAssignerIdIsNull();
 
-    List<AssignedOrders> findByAssignerId(Long assignerId);
+    List<AssignedOrders> findByAssignerId(UUID assignerId);
 
     List<AssignedOrders> findByOrderId(UUID orderId);
 }

@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface PackagedOrdersRepository extends JpaRepository<PackagedOrders, Long> {
     Page<PackagedOrders> findByPackagerIdIsNull(Pageable pageable);
-    Page<PackagedOrders> findByPackagerId(Long packagerId, Pageable pageable);
+    Page<PackagedOrders> findByPackagerId(UUID packagerId, Pageable pageable);
     Page<PackagedOrders> findByOrderId(UUID orderId, Pageable pageable);
 }

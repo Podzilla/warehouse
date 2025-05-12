@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("warehouse/manager")
@@ -60,7 +57,7 @@ public class ManagerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getManagerById(@PathVariable Long id) {
+    public ResponseEntity<?> getManagerById(@PathVariable UUID id) {
         Optional<Manager> manager = managerService.getManagerById(id);
         return manager.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -79,28 +76,28 @@ public class ManagerController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateManager(@PathVariable Long id, @RequestBody Manager managerDetails) {
+    public ResponseEntity<?> updateManager(@PathVariable UUID id, @RequestBody Manager managerDetails) {
         Optional<Manager> updatedManager = managerService.updateManager(id, managerDetails);
         return updatedManager.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/activate/{id}")
-    public ResponseEntity<?> activateManager(@PathVariable Long id) {
+    public ResponseEntity<?> activateManager(@PathVariable UUID id) {
         Optional<Manager> manager = managerService.activateManager(id);
         return manager.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/deactivate/{id}")
-    public ResponseEntity<?> deactivateManager(@PathVariable Long id) {
+    public ResponseEntity<?> deactivateManager(@PathVariable UUID id) {
         Optional<Manager> manager = managerService.deactivateManager(id);
         return manager.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteManager(@PathVariable Long id) {
+    public ResponseEntity<?> deleteManager(@PathVariable UUID id) {
         boolean deleted = managerService.deleteManager(id);
         if (deleted) {
             Map<String, String> response = new HashMap<>();

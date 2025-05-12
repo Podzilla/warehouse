@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("warehouse/packagers")
 public class PackagerController {
@@ -27,7 +29,7 @@ public class PackagerController {
 
    //@PreAuthorize("hasAnyRole('MANAGER', 'ASSIGNER')")
     @GetMapping("/{id}")
-    public ResponseEntity<Packager> getPackagerById(@PathVariable Long id) {
+    public ResponseEntity<Packager> getPackagerById(@PathVariable UUID id) {
         return packagerService.getPackagerById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -41,7 +43,7 @@ public class PackagerController {
 
    // @PreAuthorize("hasRole('MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<Packager> updatePackager(@PathVariable Long id, @RequestBody Packager updated) {
+    public ResponseEntity<Packager> updatePackager(@PathVariable UUID id, @RequestBody Packager updated) {
         try {
             return ResponseEntity.ok(packagerService.updatePackager(id, updated));
         } catch (RuntimeException e) {
@@ -51,7 +53,7 @@ public class PackagerController {
 
    // @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePackager(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePackager(@PathVariable UUID id) {
         packagerService.deletePackager(id);
         return ResponseEntity.noContent().build();
     }

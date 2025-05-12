@@ -11,5 +11,5 @@ import java.util.UUID;
 public class OrderPackagingCompletedEvent {
     private LocalDateTime timestamp;
     private UUID orderId;
-    private Long packagedByUserId;
+    private UUID packagedByUserId;
 }

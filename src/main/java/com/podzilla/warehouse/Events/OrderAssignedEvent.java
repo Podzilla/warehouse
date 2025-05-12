@@ -11,6 +11,6 @@ import java.util.UUID;
 public class OrderAssignedEvent {
     private LocalDateTime timestamp;
     private UUID orderId;
-    private Long AssignerID;
+    private UUID AssignerID;
     private UUID courierId;
 }
