@@ -7,7 +7,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,7 +23,7 @@ public class AssignedOrdersService {
         return Optional.ofNullable(assignedOrdersRepository.findByOrderId(orderId));
     }
     
-    public Optional<List<AssignedOrders>> findByAssignerId(UUID assignerId) {
+    public Optional<List<AssignedOrders>> findByAssignerId(Long assignerId) {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerId(assignerId));
     }
     

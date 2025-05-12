@@ -40,7 +40,7 @@ public class AssignerController {
 
     @Operation(summary = "Find assignments by assigner ID")
     @GetMapping("/assigner/{assignerId}")
-    public ResponseEntity<List<AssignedOrders>> getByAssignerId(@PathVariable UUID assignerId) {
+    public ResponseEntity<List<AssignedOrders>> getByAssignerId(@PathVariable Long assignerId) {
         log.info("Fetching assignments by assignerId={}", assignerId);
         Optional<List<AssignedOrders>> result = assignerService.findByAssignerId(assignerId);
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
