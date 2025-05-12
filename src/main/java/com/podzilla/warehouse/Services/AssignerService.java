@@ -1,17 +1,12 @@
 package com.podzilla.warehouse.Services;
 
-import com.podzilla.warehouse.Events.OrderAssignedEvent;
-import com.podzilla.warehouse.Models.AssignedOrders;
 import com.podzilla.warehouse.Models.Assigner;
 import com.podzilla.warehouse.Repositories.AssignerRepository;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +23,7 @@ public class AssignerService {
         return assignerRepository.findAll(pageable);
     }
 
-    public boolean deleteAssigner(Long id) {
+    public boolean deleteAssigner(UUID id) {
         if (assignerRepository.existsById(id)) {
             assignerRepository.deleteById(id);
             return true;
@@ -36,18 +31,17 @@ public class AssignerService {
         return false;
     }
 
-    public Optional<Assigner> activateAssigner(Long id) {
+    public Optional<Assigner> activateAssigner(UUID id) {
         return assignerRepository.findById(id).map(assigner -> {
             assigner.setActive(true);
             return assignerRepository.save(assigner);
         });
     }
 
-    public Optional<Assigner> deactivateAssigner(Long id) {
+    public Optional<Assigner> deactivateAssigner(UUID id) {
         return assignerRepository.findById(id).map(assigner -> {
             assigner.setActive(false);
             return assignerRepository.save(assigner);
         });
     }
-
 }

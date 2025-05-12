@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -70,7 +67,7 @@ public class ManagerController {
 
     @Operation(summary = "Get manager by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<?> getManagerById(@PathVariable Long id) {
+    public ResponseEntity<?> getManagerById(@PathVariable UUID id) {
         log.info("Fetching manager by ID: {}", id);
         Optional<Manager> manager = managerService.getManagerById(id);
         return manager.map(ResponseEntity::ok)
@@ -95,7 +92,7 @@ public class ManagerController {
 
     @Operation(summary = "Update manager by ID")
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateManager(@PathVariable Long id, @RequestBody Manager managerDetails) {
+    public ResponseEntity<?> updateManager(@PathVariable UUID id, @RequestBody Manager managerDetails) {
         log.info("Updating manager with ID: {}", id);
         Optional<Manager> updatedManager = managerService.updateManager(id, managerDetails);
         return updatedManager.map(ResponseEntity::ok)
@@ -104,7 +101,7 @@ public class ManagerController {
 
     @Operation(summary = "Activate manager by ID")
     @PutMapping("/activate/{id}")
-    public ResponseEntity<?> activateManager(@PathVariable Long id) {
+    public ResponseEntity<?> activateManager(@PathVariable UUID id) {
         log.info("Activating manager with ID: {}", id);
         Optional<Manager> manager = managerService.activateManager(id);
         return manager.map(ResponseEntity::ok)
@@ -113,7 +110,7 @@ public class ManagerController {
 
     @Operation(summary = "Deactivate manager by ID")
     @PutMapping("/deactivate/{id}")
-    public ResponseEntity<?> deactivateManager(@PathVariable Long id) {
+    public ResponseEntity<?> deactivateManager(@PathVariable UUID id) {
         log.info("Deactivating manager with ID: {}", id);
         Optional<Manager> manager = managerService.deactivateManager(id);
         return manager.map(ResponseEntity::ok)
@@ -122,7 +119,7 @@ public class ManagerController {
 
     @Operation(summary = "Delete manager by ID")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteManager(@PathVariable Long id) {
+    public ResponseEntity<?> deleteManager(@PathVariable UUID id) {
         log.info("Deleting manager with ID: {}", id);
         boolean deleted = managerService.deleteManager(id);
         if (deleted) {

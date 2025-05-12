@@ -3,52 +3,51 @@ package com.podzilla.warehouse.Controllers;
 import com.podzilla.warehouse.Models.PackagedOrders;
 import com.podzilla.warehouse.Services.PackagedOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
 @RestController
-@RequestMapping("/package")
+@RequestMapping("warehouse/package")
+@Validated
 public class PackagedOrdersController {
 
     @Autowired
     private PackagedOrdersService packagedOrdersService;
 
-    @Operation(summary = "Get packaged orders by order ID")
+    //@PreAuthorize("hasAnyRole('MANAGER', 'ASSIGNER', 'PACKAGER')")
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<List<PackagedOrders>> getByOrderId(@PathVariable UUID orderId) {
-        log.info("Fetching packaged orders for orderId={}", orderId);
-        Optional<List<PackagedOrders>> packagedOrders = packagedOrdersService.findByOrderId(orderId);
-        return packagedOrders.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Page<PackagedOrders>> getByOrderId(@PathVariable UUID orderId,
+                                                             @PageableDefault(size = 10) Pageable pageable) {
+        Page<PackagedOrders> packagedOrders = packagedOrdersService.findByOrderId(orderId, pageable);
+        return packagedOrders.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(packagedOrders);
     }
 
-    @Operation(summary = "Get packaged orders by packager ID")
+    //@PreAuthorize("hasAnyRole('MANAGER', 'ASSIGNER', 'PACKAGER')")
     @GetMapping("/packager/{packagerId}")
-    public ResponseEntity<List<PackagedOrders>> getByPackagerId(@PathVariable UUID packagerId) {
-        log.info("Fetching packaged orders by packagerId={}", packagerId);
-        Optional<List<PackagedOrders>> packagedOrders = packagedOrdersService.findByPackagerId(packagerId);
-        return packagedOrders.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Page<PackagedOrders>> getByPackagerId(@PathVariable UUID packagerId,
+                                                                @PageableDefault(size = 10) Pageable pageable) {
+        Page<PackagedOrders> packagedOrders = packagedOrdersService.findByPackagerId(packagerId, pageable);
+        return packagedOrders.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(packagedOrders);
     }
 
-    @Operation(summary = "Get all unassigned packaged orders")
+    //@PreAuthorize("hasAnyRole('MANAGER', 'ASSIGNER', 'PACKAGER')")
     @GetMapping("/unassigned")
-    public ResponseEntity<List<PackagedOrders>> getUnassignedOrders() {
-        log.info("Fetching unassigned packaged orders");
-        Optional<List<PackagedOrders>> packagedOrders = packagedOrdersService.findByPackagerIdIsNull();
-        return packagedOrders.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Page<PackagedOrders>> getUnassignedOrders(@PageableDefault(size = 10) Pageable pageable) {
+        Page<PackagedOrders> packagedOrders = packagedOrdersService.findByPackagerIdIsNull(pageable);
+        return packagedOrders.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(packagedOrders);
     }
 
-    @Operation(summary = "Package an order")
+    //@PreAuthorize("hasRole('PACKAGER')")
     @PostMapping
-    public ResponseEntity<PackagedOrders> packageOrder(@RequestParam UUID orderId, @RequestParam UUID packagerId) {
-        log.info("Packaging orderId={} by packagerId={}", orderId, packagerId);
-        PackagedOrders packagedOrder = packagedOrdersService.packageOrder(orderId, packagerId);
+    public ResponseEntity<Optional<PackagedOrders>> packageOrder(@RequestParam UUID packagerId) {
+        Optional<PackagedOrders> packagedOrder = packagedOrdersService.packageOrder(packagerId);
         return ResponseEntity.ok(packagedOrder);
     }
 }

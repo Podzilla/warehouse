@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -32,7 +33,7 @@ public class PackagerController {
 
     @Operation(summary = "Get a packager by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Packager> getPackagerById(@PathVariable Long id) {
+    public ResponseEntity<Packager> getPackagerById(@PathVariable UUID id) {
         log.info("Fetching packager by id={}", id);
         return packagerService.getPackagerById(id)
                 .map(ResponseEntity::ok)
@@ -43,15 +44,15 @@ public class PackagerController {
     @PostMapping
     public Optional<Packager> createPackager(@RequestBody Packager packager) {
         log.info("Creating new packager");
-        return packagerService.createPackager(packager);
+        return Optional.ofNullable(packagerService.createPackager(packager));
     }
 
     @Operation(summary = "Update an existing packager")
     @PutMapping("/{id}")
-    public ResponseEntity<Optional<Packager>> updatePackager(@PathVariable Long id, @RequestBody Packager updated) {
+    public ResponseEntity<Optional<Packager>> updatePackager(@PathVariable UUID id, @RequestBody Packager updated) {
         log.info("Updating packager with id={}", id);
         try {
-            return ResponseEntity.ok(packagerService.updatePackager(id, updated));
+            return ResponseEntity.ok(Optional.ofNullable(packagerService.updatePackager(id, updated)));
         } catch (RuntimeException e) {
             log.warn("Failed to update packager: {}", e.getMessage());
             return ResponseEntity.notFound().build();
@@ -60,7 +61,7 @@ public class PackagerController {
 
     @Operation(summary = "Delete a packager by ID")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePackager(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePackager(@PathVariable UUID id) {
         log.info("Deleting packager with id={}", id);
         packagerService.deletePackager(id);
         return ResponseEntity.noContent().build();

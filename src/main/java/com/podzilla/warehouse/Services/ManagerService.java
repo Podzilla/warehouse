@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ManagerService {
@@ -35,7 +36,7 @@ public class ManagerService {
         return managerRepository.findByIsActiveFalse();
     }
 
-    public Optional<Manager> getManagerById(Long id) {
+    public Optional<Manager> getManagerById(UUID id) {
         return managerRepository.findById(id);
     }
 
@@ -47,7 +48,7 @@ public class ManagerService {
         return managerRepository.findByDepartment(department);
     }
 
-    public Optional<Manager> updateManager(Long id, Manager managerDetails) {
+    public Optional<Manager> updateManager(UUID id, Manager managerDetails) {
         return managerRepository.findById(id)
                 .map(manager -> {
                     if (managerDetails.getName() != null) manager.setName(managerDetails.getName());
@@ -60,7 +61,7 @@ public class ManagerService {
                 });
     }
 
-    public Optional<Manager> activateManager(Long id) {
+    public Optional<Manager> activateManager(UUID id) {
         return managerRepository.findById(id)
                 .map(manager -> {
                     manager.setIsActive(true);
@@ -68,7 +69,7 @@ public class ManagerService {
                 });
     }
 
-    public Optional<Manager> deactivateManager(Long id) {
+    public Optional<Manager> deactivateManager(UUID id) {
         return managerRepository.findById(id)
                 .map(manager -> {
                     manager.setIsActive(false);
@@ -76,7 +77,7 @@ public class ManagerService {
                 });
     }
 
-    public boolean deleteManager(Long id) {
+    public boolean deleteManager(UUID id) {
         if (managerRepository.existsById(id)) {
             managerRepository.deleteById(id);
             return true;
