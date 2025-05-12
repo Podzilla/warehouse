@@ -20,18 +20,18 @@ public class PackagedOrders {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID orderId;
 
-    private UUID packagerId;
+    private Long packagerId;
 
     @CreationTimestamp
     private LocalDateTime packagedAt;
 
-    public PackagedOrders(UUID orderId, UUID packagerId, LocalDateTime packagedAt) {
+    public PackagedOrders(UUID orderId, Long packagerId, LocalDateTime packagedAt) {
         this.orderId = orderId;
         this.packagerId = packagerId;
         this.packagedAt = packagedAt;
     }
 
-    public PackagedOrders(UUID packagerId) {
+    public PackagedOrders(Long packagerId) {
         this.packagerId = packagerId;
         this.packagedAt = LocalDateTime.now();
     }

@@ -23,7 +23,7 @@ public class PackagedOrdersController {
 
     //@PreAuthorize("hasAnyRole('MANAGER', 'ASSIGNER', 'PACKAGER')")
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<Page<PackagedOrders>> getByOrderId(@PathVariable Long orderId,
+    public ResponseEntity<Page<PackagedOrders>> getByOrderId(@PathVariable UUID orderId,
                                                              @PageableDefault(size = 10) Pageable pageable) {
         Page<PackagedOrders> packagedOrders = packagedOrdersService.findByOrderId(orderId, pageable);
         return packagedOrders.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(packagedOrders);
@@ -46,7 +46,7 @@ public class PackagedOrdersController {
 
     //@PreAuthorize("hasRole('PACKAGER')")
     @PostMapping
-    public ResponseEntity<Optional<PackagedOrders>> packageOrder(@RequestParam UUID packagerId) {
+    public ResponseEntity<Optional<PackagedOrders>> packageOrder(@RequestParam Long packagerId) {
         Optional<PackagedOrders> packagedOrder = packagedOrdersService.packageOrder(packagerId);
         return ResponseEntity.ok(packagedOrder);
     }

@@ -15,7 +15,7 @@ public class PackagedOrdersService {
     @Autowired
     private PackagedOrdersRepository packagedOrdersRepository;
 
-    public Page<PackagedOrders> findByOrderId(Long orderId, Pageable pageable) {
+    public Page<PackagedOrders> findByOrderId(UUID orderId, Pageable pageable) {
         return packagedOrdersRepository.findByOrderId(orderId, pageable);
     }
 
@@ -27,7 +27,7 @@ public class PackagedOrdersService {
         return packagedOrdersRepository.findByPackagerIdIsNull(pageable);
     }
 
-    public Optional<PackagedOrders> packageOrder(UUID packagerId) {
+    public Optional<PackagedOrders> packageOrder(Long packagerId) {
         PackagedOrders packagedOrder = new PackagedOrders(packagerId);
         return Optional.of(packagedOrdersRepository.save(packagedOrder));
     }
