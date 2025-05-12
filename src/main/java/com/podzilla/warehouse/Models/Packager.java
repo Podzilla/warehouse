@@ -16,14 +16,14 @@ public class Packager {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column
-    private boolean active = true;
+    @Column(nullable = false)
+    private boolean isActive = true;
 
     public Packager(String name) {
         this.name = name;
     }
-    public Packager(String name, boolean active) {
+    public Packager(String name, boolean isActive) {
         this.name = name;
-        this.active = active;
+        this.isActive = isActive;
     }
 }
