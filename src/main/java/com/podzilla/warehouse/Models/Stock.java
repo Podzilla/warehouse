@@ -61,11 +61,4 @@ public class Stock {
         this.quantity = quantity;
     }
 
-    public void setCost(Double cost) {
-        this.price = cost;
-    }
-
-    public double getCost() {
-        return this.price;
-    }
 }
