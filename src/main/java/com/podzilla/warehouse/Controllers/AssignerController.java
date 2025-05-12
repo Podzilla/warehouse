@@ -23,10 +23,10 @@ public class AssignerController {
     @Operation(summary = "Assign an order to a courier")
     @PostMapping("/order")
     public ResponseEntity<AssignedOrders> assignOrder(@RequestParam UUID orderId,
-                                                      @RequestParam UUID taskId,
+                                                      @RequestParam Long assignerId,
                                                       @RequestParam UUID courierId) {
-        log.info("Received assignment request: orderId={}, taskId={}, courierId={}", orderId, taskId, courierId);
-        AssignedOrders assigned = assignerService.assignOrder(orderId, taskId, courierId);
+        log.info("Received assignment request: orderId={}, taskId={}, courierId={}", orderId, assignerId, courierId);
+        AssignedOrders assigned = assignerService.assignOrder(orderId, assignerId, courierId);
         return ResponseEntity.ok(assigned);
     }
 
