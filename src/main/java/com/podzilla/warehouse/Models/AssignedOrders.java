@@ -34,9 +34,9 @@ public class AssignedOrders {
     }
 
 
-    public AssignedOrders(UUID orderId, UUID taskId, UUID courierId, LocalDateTime assignedAt) {
+    public AssignedOrders(UUID orderId, Long assignerId, UUID courierId, LocalDateTime assignedAt) {
         this.orderId = orderId;
-        this.assignerId = taskId;
+        this.assignerId = assignerId;
         this.courierId = courierId;
         this.assignedAt = assignedAt;
     }
