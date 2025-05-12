@@ -29,8 +29,8 @@ class PackagerServiceTests {
         packager.setName("John");
         when(repository.save(packager)).thenReturn(packager);
 
-        Packager saved = service.createPackager(packager);
-        assertEquals("John", saved.getName());
+        Optional<Packager> saved = service.createPackager(packager);
+        assertEquals("John", saved.get().getName());
         verify(repository, times(1)).save(packager);
     }
 
@@ -58,8 +58,8 @@ class PackagerServiceTests {
         when(repository.findById(1L)).thenReturn(Optional.of(existing));
         when(repository.save(any(Packager.class))).thenReturn(existing);
 
-        Packager result = service.updatePackager(1L, updated);
-        assertEquals("New", result.getName());
-        assertTrue(result.isActive());
+        Optional<Packager> result = service.updatePackager(1L, updated);
+        assertEquals("New", result.get().getName());
+        assertTrue(result.get().isActive());
     }
 }
