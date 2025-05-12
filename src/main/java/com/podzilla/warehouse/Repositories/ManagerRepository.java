@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ManagerRepository extends JpaRepository<Manager, Long> {
-    Optional<Manager> findById(UUID id);
+public interface ManagerRepository extends JpaRepository<Manager, UUID> {
     Optional<Manager> findByEmail(String email);
 
     List<Manager> findByDepartment(String department);
@@ -17,7 +16,7 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
     List<Manager> findByIsActiveFalse();
 
-    Boolean existsById(UUID managerId);
+    boolean existsById(UUID managerId);
 
     void deleteById(UUID managerId);
 }

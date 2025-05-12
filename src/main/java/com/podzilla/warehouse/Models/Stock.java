@@ -2,6 +2,7 @@ package com.podzilla.warehouse.Models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Setter
+@NoArgsConstructor
 @Getter
 @Table(name = "Stock")
 public class Stock {
@@ -39,8 +41,7 @@ public class Stock {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    public Stock() {}
+    
 
     public Stock(String name, Integer quantity, Integer threshold) {
         this.name = name;

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class AssignedOrders {
     private UUID courierId;
 
     @Column()
+    @CreationTimestamp
     private LocalDateTime assignedAt;
 
     public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId) {
