@@ -2,6 +2,7 @@ package com.podzilla.warehouse.Models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Setter
+@NoArgsConstructor
 @Getter
 @Table(name = "Assignments")
 public class AssignedOrders {
@@ -16,7 +18,7 @@ public class AssignedOrders {
     private UUID orderId;
 
     @Column()
-    private UUID assignerId;
+    private Long assignerId;
 
     @Column()
     private UUID courierId;
@@ -24,10 +26,7 @@ public class AssignedOrders {
     @Column()
     private LocalDateTime assignedAt;
 
-
-    public AssignedOrders() {}
-
-    public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId) {
+    public AssignedOrders(UUID orderId, Long assignerId, UUID courierId) {
         this.orderId = orderId;
         this.assignerId = assignerId;
         this.courierId = courierId;

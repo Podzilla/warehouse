@@ -32,12 +32,12 @@ public class AssignedOrdersService {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerIdIsNull());
     }
 
-    public AssignedOrders assignOrder(UUID orderId, UUID taskId, UUID courierId) {
-        AssignedOrders assignment = new AssignedOrders(orderId, taskId, courierId);
+    public AssignedOrders assignOrder(UUID orderId, Long AssignerID, UUID courierId) {
+        AssignedOrders assignment = new AssignedOrders(orderId, AssignerID, courierId);
         assignedOrdersRepository.save(assignment);
 
         OrderAssignedEvent event = new OrderAssignedEvent(
-                assignment.getAssignedAt(), orderId, taskId, courierId
+                assignment.getAssignedAt(), orderId, AssignerID, courierId
         );
 
         rabbitTemplate.convertAndSend("analytics.exchange", "analytics.order.assigned", event);
