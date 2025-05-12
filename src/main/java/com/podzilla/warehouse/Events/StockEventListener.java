@@ -31,7 +31,7 @@ public class StockEventListener {
                 allAvailable = false;
                 int missing = item.getQuantity() - stock.getQuantity();
                 // Publish ERP restock event
-                ErpRestockEvent erpEvent = new ErpRestockEvent(item.getProductId(), missing);
+                ErpRestockEvent erpEvent = EventFactory.createErpRestockEvent(item.getProductId(), missing);
                 rabbitTemplate.convertAndSend(
 //                        RabbitMQConfig.ERP_EXCHANGE,
 //                        RabbitMQConfig.ERP_ROUTING,

@@ -1,5 +1,6 @@
 package com.podzilla.warehouse.Services;
 
+import com.podzilla.warehouse.Events.EventFactory;
 import com.podzilla.warehouse.Events.OrderPackagingCompletedEvent;
 import com.podzilla.warehouse.Models.PackagedOrders;
 import com.podzilla.warehouse.Repositories.PackagedOrdersRepository;
@@ -23,11 +24,11 @@ public class PackagedOrdersService {
     public Optional<List<PackagedOrders>> findByOrderId(UUID orderId) {
         return Optional.ofNullable(packagedOrdersRepository.findByOrderId(orderId));
     }
-    
+
     public Optional<List<PackagedOrders>> findByPackagerId(UUID packagerId) {
         return Optional.ofNullable(packagedOrdersRepository.findByPackagerId(packagerId));
     }
-    
+
     public Optional<List<PackagedOrders>> findByPackagerIdIsNull() {
         return Optional.ofNullable(packagedOrdersRepository.findByPackagerIdIsNull());
     }
@@ -38,7 +39,7 @@ public class PackagedOrdersService {
         packagedOrdersRepository.save(packagedOrder);
 
         // Emit event to Analytics
-        OrderPackagingCompletedEvent event = new OrderPackagingCompletedEvent(
+        OrderPackagingCompletedEvent event = EventFactory.createOrderPackagingCompletedEvent(
                 now,
                 orderId,
                 packagerId

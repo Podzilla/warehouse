@@ -1,5 +1,6 @@
 package com.podzilla.warehouse.Services;
 
+import com.podzilla.warehouse.Events.EventFactory;
 import com.podzilla.warehouse.Events.InventorySnapshotEvent;
 import com.podzilla.warehouse.Events.ProductEvent;
 import com.podzilla.warehouse.Models.Stock;
@@ -25,7 +26,7 @@ public class StockService {
         Stock stock = new Stock(name, quantity, threshold, category, cost);
         Stock saved = stockRepository.save(stock);
 
-        ProductEvent event = new ProductEvent(
+        ProductEvent event = EventFactory.createProductEvent(
                 LocalDateTime.now(),
                 saved.getId(),
                 saved.getName(),
@@ -70,7 +71,7 @@ public class StockService {
 
                     Stock updated = stockRepository.save(stock);
 
-                    ProductEvent event = new ProductEvent(
+                    ProductEvent event = EventFactory.createProductEvent(
                             LocalDateTime.now(),
                             updated.getId(),
                             updated.getName(),
@@ -86,10 +87,10 @@ public class StockService {
 
     public InventorySnapshotEvent generateSnapshot(UUID warehouseId) {
         List<InventorySnapshotEvent.ProductSnapshot> productSnapshots = stockRepository.findAll().stream()
-                .map(stock -> new InventorySnapshotEvent.ProductSnapshot(stock.getId(), stock.getQuantity()))
+                .map(stock -> EventFactory.createProductSnapshot(stock.getId(), stock.getQuantity()))
                 .toList();
 
-        return new InventorySnapshotEvent(LocalDateTime.now(), warehouseId, productSnapshots);
+        return EventFactory.createInventorySnapshotEvent(LocalDateTime.now(), warehouseId, productSnapshots);
     }
 
     public boolean deleteStock(UUID id) {

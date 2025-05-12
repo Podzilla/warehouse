@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class OrderPlacedEvent {
+public class OrderPlacedEvent implements WarehouseEvent {
     private UUID orderId;
     private List<OrderItem> items;
 

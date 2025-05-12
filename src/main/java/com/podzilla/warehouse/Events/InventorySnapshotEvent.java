@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class InventorySnapshotEvent {
+public class InventorySnapshotEvent implements WarehouseEvent {
     private LocalDateTime timestamp;
     private UUID warehouseId;
     private List<ProductSnapshot> products;
@@ -21,4 +21,3 @@ public class InventorySnapshotEvent {
         private int currentQuantity;
     }
 }
-
