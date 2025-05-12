@@ -2,13 +2,18 @@ package com.podzilla.warehouse.Controllers;
 
 import com.podzilla.warehouse.Models.Packager;
 import com.podzilla.warehouse.Services.PackagerService;
+import lombok.extern.slf4j.Slf4j;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+import java.util.UUID;
+
+@Slf4j
 @RestController
 @RequestMapping("warehouse/packagers")
 public class PackagerController {
@@ -19,39 +24,45 @@ public class PackagerController {
         this.packagerService = packagerService;
     }
 
-   // @PreAuthorize("hasAnyRole('MANAGER', 'ASSIGNER')")
+    @Operation(summary = "Get all packagers (paginated)")
     @GetMapping
     public Page<Packager> getAllPackagers(@PageableDefault(size = 10) Pageable pageable) {
+        log.info("Fetching all packagers with pagination: pageNumber={}, pageSize={}", pageable.getPageNumber(), pageable.getPageSize());
         return packagerService.getAllPackagers(pageable);
     }
 
-   //@PreAuthorize("hasAnyRole('MANAGER', 'ASSIGNER')")
+    @Operation(summary = "Get a packager by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Packager> getPackagerById(@PathVariable Long id) {
+    public ResponseEntity<Packager> getPackagerById(@PathVariable UUID id) {
+        log.info("Fetching packager by id={}", id);
         return packagerService.getPackagerById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-   // @PreAuthorize("hasRole('MANAGER')")
+    @Operation(summary = "Create a new packager")
     @PostMapping
-    public Packager createPackager(@RequestBody Packager packager) {
-        return packagerService.createPackager(packager);
+    public Optional<Packager> createPackager(@RequestBody Packager packager) {
+        log.info("Creating new packager");
+        return Optional.ofNullable(packagerService.createPackager(packager));
     }
 
-   // @PreAuthorize("hasRole('MANAGER')")
+    @Operation(summary = "Update an existing packager")
     @PutMapping("/{id}")
-    public ResponseEntity<Packager> updatePackager(@PathVariable Long id, @RequestBody Packager updated) {
+    public ResponseEntity<Optional<Packager>> updatePackager(@PathVariable UUID id, @RequestBody Packager updated) {
+        log.info("Updating packager with id={}", id);
         try {
-            return ResponseEntity.ok(packagerService.updatePackager(id, updated));
+            return ResponseEntity.ok(Optional.ofNullable(packagerService.updatePackager(id, updated)));
         } catch (RuntimeException e) {
+            log.warn("Failed to update packager: {}", e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
-   // @PreAuthorize("hasRole('MANAGER')")
+    @Operation(summary = "Delete a packager by ID")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePackager(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePackager(@PathVariable UUID id) {
+        log.info("Deleting packager with id={}", id);
         packagerService.deletePackager(id);
         return ResponseEntity.noContent().build();
     }

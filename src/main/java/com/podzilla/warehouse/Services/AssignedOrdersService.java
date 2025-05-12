@@ -8,7 +8,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,12 +32,12 @@ public class AssignedOrdersService {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerIdIsNull());
     }
 
-    public AssignedOrders assignOrder(UUID orderId, UUID taskId, UUID courierId, UUID userId) {
-        AssignedOrders assignment = new AssignedOrders(orderId, taskId, courierId, LocalDateTime.now());
+    public AssignedOrders assignOrder(UUID orderId, UUID AssignerID, UUID courierId) {
+        AssignedOrders assignment = new AssignedOrders(orderId, AssignerID, courierId);
         assignedOrdersRepository.save(assignment);
 
         OrderAssignedEvent event = EventFactory.createOrderAssignedEvent(
-                assignment.getAssignedAt(), orderId, taskId, courierId
+                assignment.getAssignedAt(), orderId, AssignerID, courierId
         );
 
         rabbitTemplate.convertAndSend("analytics.exchange", "analytics.order.assigned", event);

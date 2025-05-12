@@ -31,7 +31,7 @@ public class StockService {
                 saved.getId(),
                 saved.getName(),
                 saved.getCategory(),
-                saved.getCost(),
+                saved.getPrice(),
                 saved.getThreshold()
         );
 
@@ -67,7 +67,7 @@ public class StockService {
                     if (quantity != null) stock.setQuantity(quantity);
                     if (threshold != null) stock.setThreshold(threshold);
                     if (category != null) stock.setCategory(category);
-                    if (cost != null) stock.setCost(cost);
+                    if (cost != null) stock.setPrice(cost);
 
                     Stock updated = stockRepository.save(stock);
 
@@ -76,7 +76,7 @@ public class StockService {
                             updated.getId(),
                             updated.getName(),
                             updated.getCategory(),
-                            updated.getCost(),
+                            updated.getPrice(),
                             updated.getThreshold()
                     );
                     rabbitTemplate.convertAndSend("analytics.exchange", "analytics.product.changed", event);

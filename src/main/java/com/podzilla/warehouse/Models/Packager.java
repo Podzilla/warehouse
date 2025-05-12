@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -12,18 +14,18 @@ import lombok.Setter;
 @Table(name = "Packagers")
 public class Packager {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @Column(nullable = false)
     private String name;
-    @Column
-    private boolean active = true;
+    @Column(nullable = false)
+    private boolean isActive = true;
 
     public Packager(String name) {
         this.name = name;
     }
-    public Packager(String name, boolean active) {
+    public Packager(String name, boolean isActive) {
         this.name = name;
-        this.active = active;
+        this.isActive = isActive;
     }
 }

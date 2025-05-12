@@ -5,8 +5,9 @@ import com.podzilla.warehouse.Repositories.PackagerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.List;
+
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PackagerService {
@@ -21,7 +22,7 @@ public class PackagerService {
         return packagerRepository.findAll(pageable);
     }
 
-    public Optional<Packager> getPackagerById(Long id) {
+    public Optional<Packager> getPackagerById(UUID id) {
         return packagerRepository.findById(id);
     }
 
@@ -29,7 +30,7 @@ public class PackagerService {
         return packagerRepository.save(packager);
     }
 
-    public Packager updatePackager(Long id, Packager updated) {
+    public Packager updatePackager(UUID id, Packager updated) {
         return packagerRepository.findById(id).map(existing -> {
             existing.setName(updated.getName());
             existing.setActive(updated.isActive());
@@ -37,7 +38,7 @@ public class PackagerService {
         }).orElseThrow(() -> new RuntimeException("Packager not found"));
     }
 
-    public void deletePackager(Long id) {
+    public void deletePackager(UUID id) {
         packagerRepository.deleteById(id);
     }
 }
