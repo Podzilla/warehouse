@@ -7,12 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("warehouse/package")
+@Validated
 public class PackagedOrdersController {
 
     @Autowired
@@ -43,8 +46,8 @@ public class PackagedOrdersController {
 
     //@PreAuthorize("hasRole('PACKAGER')")
     @PostMapping
-    public ResponseEntity<Optional<PackagedOrders>> packageOrder(@RequestParam Long orderId, @RequestParam Long packagerId) {
-        Optional<PackagedOrders> packagedOrder = packagedOrdersService.packageOrder(orderId, packagerId);
+    public ResponseEntity<Optional<PackagedOrders>> packageOrder(@RequestParam UUID packagerId) {
+        Optional<PackagedOrders> packagedOrder = packagedOrdersService.packageOrder(packagerId);
         return ResponseEntity.ok(packagedOrder);
     }
 }
