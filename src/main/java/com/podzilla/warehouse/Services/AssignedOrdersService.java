@@ -1,23 +1,30 @@
 package com.podzilla.warehouse.Services;
 
+import com.podzilla.warehouse.Events.OrderAssignedEvent;
 import com.podzilla.warehouse.Models.AssignedOrders;
 import com.podzilla.warehouse.Repositories.AssignedOrdersRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AssignedOrdersService {
     @Autowired
     private AssignedOrdersRepository assignedOrdersRepository;
 
-    public Optional<List<AssignedOrders>> findByOrderId(Long orderId) {
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    public Optional<List<AssignedOrders>> findByOrderId(UUID orderId) {
         return Optional.ofNullable(assignedOrdersRepository.findByOrderId(orderId));
     }
     
-    public Optional<List<AssignedOrders>> findByAssignerId(Long assignerId) {
+    public Optional<List<AssignedOrders>> findByAssignerId(UUID assignerId) {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerId(assignerId));
     }
     
@@ -25,9 +32,16 @@ public class AssignedOrdersService {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerIdIsNull());
     }
 
-    public AssignedOrders assignOrder(Long orderId, Long assignerId, Long courierId) {
-        AssignedOrders assignment = new AssignedOrders(orderId, assignerId, courierId);
-        return assignedOrdersRepository.save(assignment);
+    public AssignedOrders assignOrder(UUID orderId, UUID taskId, UUID courierId, UUID userId) {
+        AssignedOrders assignment = new AssignedOrders(orderId, taskId, courierId, LocalDateTime.now());
+        assignedOrdersRepository.save(assignment);
+
+        OrderAssignedEvent event = new OrderAssignedEvent(
+                assignment.getAssignedAt(), orderId, taskId, courierId
+        );
+
+        rabbitTemplate.convertAndSend("analytics.exchange", "analytics.order.assigned", event);
+        return assignment;
     }
 
 }

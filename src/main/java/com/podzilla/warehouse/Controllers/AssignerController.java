@@ -1,24 +1,56 @@
 package com.podzilla.warehouse.Controllers;
 
+import com.podzilla.warehouse.Models.AssignedOrders;
 import com.podzilla.warehouse.Services.AssignedOrdersService;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Slf4j
 @RestController
-@RequestMapping("warehouse/Assign")
+@RequestMapping("/assign")
 public class AssignerController {
 
     @Autowired
     private AssignedOrdersService assignerService;
 
-//    @PostMapping("/assignOrder")
-//    public AssignedOrders assignOrder(@RequestBody AssignedOrders assignedOrders) {
-//        return assignerService.assignOrder(assignedOrders.getOrderId(), assignedOrders.getCourierId());
-//    }
+    @Operation(summary = "Assign an order to a courier")
+    @PostMapping("/order")
+    public ResponseEntity<AssignedOrders> assignOrder(@RequestParam UUID orderId,
+                                                      @RequestParam UUID taskId,
+                                                      @RequestParam UUID courierId) {
+        log.info("Received assignment request: orderId={}, taskId={}, courierId={}", orderId, taskId, courierId);
+        AssignedOrders assigned = assignerService.assignOrder(orderId, taskId, courierId, null);
+        return ResponseEntity.ok(assigned);
+    }
 
-//    @GetMapping("/order/{orderId}")
-//    public AssignedOrders getByOrderId(@PathVariable Long orderId) {
-//        Optional<AssignedOrders> assigner = assignerService.findByOrderId(orderId);
-//        return assigner.orElse(null);
-//    }
+    @Operation(summary = "Find assignments by order ID")
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<List<AssignedOrders>> getByOrderId(@PathVariable UUID orderId) {
+        log.info("Fetching assignments for orderId={}", orderId);
+        Optional<List<AssignedOrders>> result = assignerService.findByOrderId(orderId);
+        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "Find assignments by assigner ID")
+    @GetMapping("/assigner/{assignerId}")
+    public ResponseEntity<List<AssignedOrders>> getByAssignerId(@PathVariable UUID assignerId) {
+        log.info("Fetching assignments by assignerId={}", assignerId);
+        Optional<List<AssignedOrders>> result = assignerService.findByAssignerId(assignerId);
+        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "Find unassigned orders")
+    @GetMapping("/unassigned")
+    public ResponseEntity<List<AssignedOrders>> getUnassignedOrders() {
+        log.info("Fetching unassigned orders");
+        Optional<List<AssignedOrders>> result = assignerService.findByAssignerIdIsNull();
+        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
