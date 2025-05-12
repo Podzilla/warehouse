@@ -9,5 +9,4 @@ import java.util.UUID;
 
 @Repository
 public interface PackagerRepository extends JpaRepository<Packager, UUID> {
-    Optional<Packager> findById(UUID id);
 }

@@ -16,7 +16,4 @@ public interface ManagerRepository extends JpaRepository<Manager, UUID> {
 
     List<Manager> findByIsActiveFalse();
 
-    boolean existsById(UUID managerId);
-
-    void deleteById(UUID managerId);
 }
