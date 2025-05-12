@@ -31,13 +31,14 @@ public class AssignedOrders {
         this.orderId = orderId;
         this.assignerId = assignerId;
         this.courierId = courierId;
+        this.assignedAt = LocalDateTime.now();
     }
 
 
-    public AssignedOrders(UUID orderId, UUID taskId, UUID courierId, LocalDateTime now) {
+    public AssignedOrders(UUID orderId, UUID taskId, UUID courierId, LocalDateTime assignedAt) {
         this.orderId = orderId;
         this.assignerId = taskId;
         this.courierId = courierId;
-        this.assignedAt = now;
+        this.assignedAt = assignedAt;
     }
 }

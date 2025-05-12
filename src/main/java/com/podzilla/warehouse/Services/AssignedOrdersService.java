@@ -32,8 +32,8 @@ public class AssignedOrdersService {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerIdIsNull());
     }
 
-    public AssignedOrders assignOrder(UUID orderId, UUID taskId, UUID courierId, UUID userId) {
-        AssignedOrders assignment = new AssignedOrders(orderId, taskId, courierId, LocalDateTime.now());
+    public AssignedOrders assignOrder(UUID orderId, UUID taskId, UUID courierId) {
+        AssignedOrders assignment = new AssignedOrders(orderId, taskId, courierId);
         assignedOrdersRepository.save(assignment);
 
         OrderAssignedEvent event = new OrderAssignedEvent(

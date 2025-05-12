@@ -26,7 +26,7 @@ public class AssignerController {
                                                       @RequestParam UUID taskId,
                                                       @RequestParam UUID courierId) {
         log.info("Received assignment request: orderId={}, taskId={}, courierId={}", orderId, taskId, courierId);
-        AssignedOrders assigned = assignerService.assignOrder(orderId, taskId, courierId, null);
+        AssignedOrders assigned = assignerService.assignOrder(orderId, taskId, courierId);
         return ResponseEntity.ok(assigned);
     }
 
