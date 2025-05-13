@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class ErpRestockEvent {
+public class ErpRestockEvent implements WarehouseEvent {
     private UUID productId;
     private int missingQuantity;
 }

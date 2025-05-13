@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class ProductEvent {
+public class ProductEvent implements WarehouseEvent {
     private LocalDateTime timestamp;
     private UUID id;
     private String name;

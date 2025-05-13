@@ -1,5 +1,6 @@
 package com.podzilla.warehouse.Services;
 
+import com.podzilla.warehouse.Events.EventFactory;
 import com.podzilla.warehouse.Events.OrderAssignedEvent;
 import com.podzilla.warehouse.Models.AssignedOrders;
 import com.podzilla.warehouse.Repositories.AssignedOrdersRepository;
@@ -22,11 +23,11 @@ public class AssignedOrdersService {
     public Optional<List<AssignedOrders>> findByOrderId(UUID orderId) {
         return Optional.ofNullable(assignedOrdersRepository.findByOrderId(orderId));
     }
-    
+
     public Optional<List<AssignedOrders>> findByAssignerId(UUID assignerId) {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerId(assignerId));
     }
-    
+
     public Optional<List<AssignedOrders>> findByAssignerIdIsNull() {
         return Optional.ofNullable(assignedOrdersRepository.findByAssignerIdIsNull());
     }
@@ -35,7 +36,7 @@ public class AssignedOrdersService {
         AssignedOrders assignment = new AssignedOrders(orderId, AssignerID, courierId);
         assignedOrdersRepository.save(assignment);
 
-        OrderAssignedEvent event = new OrderAssignedEvent(
+        OrderAssignedEvent event = EventFactory.createOrderAssignedEvent(
                 assignment.getAssignedAt(), orderId, AssignerID, courierId
         );
 

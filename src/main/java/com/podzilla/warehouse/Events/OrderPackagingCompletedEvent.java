@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class OrderPackagingCompletedEvent {
+public class OrderPackagingCompletedEvent implements WarehouseEvent {
     private LocalDateTime timestamp;
     private UUID orderId;
     private UUID packagedByUserId;
