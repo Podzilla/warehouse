@@ -69,8 +69,12 @@ public class EventFactory {
      */
     public static OrderAssignedToCourierEvent createOrderAssignedToCourierEvent(
             UUID orderId,
-            UUID courierId) {
-        return new OrderAssignedToCourierEvent(orderId.toString(), courierId.toString());
+            UUID courierId,
+            double price,
+            double orderLatitude,
+            double orderLongitude) {
+        BigDecimal priceBigDecimal = BigDecimal.valueOf(price);
+        return new OrderAssignedToCourierEvent(orderId.toString(), courierId.toString(), priceBigDecimal, orderLatitude, orderLongitude);
     }
 //
 //    /**

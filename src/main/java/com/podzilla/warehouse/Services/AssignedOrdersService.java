@@ -53,9 +53,10 @@ public class AssignedOrdersService {
         AssignedOrders assignment = new AssignedOrders(orderId, assignerId, courierId);
         assignedOrdersRepository.save(assignment);
 
-        OrderAssignedToCourierEvent event = EventFactory.createOrderAssignedToCourierEvent(orderId, courierId);
-
-        eventPublisher.publishEvent(EventsConstants.ORDER_ASSIGNED_TO_COURIER, event);
+        //TODO: create the event
+//        OrderAssignedToCourierEvent event = EventFactory.createOrderAssignedToCourierEvent(orderId, courierId);
+//
+//        eventPublisher.publishEvent(EventsConstants.ORDER_ASSIGNED_TO_COURIER, event);
 
 //        rabbitTemplate.convertAndSend("analytics.exchange", "analytics.order.assigned", event);
         return assignment;
