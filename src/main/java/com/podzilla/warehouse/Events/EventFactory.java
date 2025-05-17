@@ -1,6 +1,8 @@
 package com.podzilla.warehouse.Events;
 
-import java.time.LocalDateTime;
+import com.podzilla.mq.events.*;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,126 +11,153 @@ public class EventFactory {
     /**
      * Creates a ProductEvent.
      *
-     * @param timestamp The timestamp of the event
-     * @param id The product ID
-     * @param name The product name
-     * @param category The product category
-     * @param cost The product cost
+     * @param productId         The product ID
+     * @param name              The product name
+     * @param category          The product category
+     * @param cost              The product cost
      * @param lowStockThreshold The low stock threshold
      * @return A new ProductEvent instance
      */
-    public static ProductEvent createProductEvent(
-            LocalDateTime timestamp,
-            UUID id,
+    public static ProductCreatedEvent createProductEvent(
+            UUID productId,
             String name,
             String category,
             double cost,
             int lowStockThreshold) {
-        return new ProductEvent(timestamp, id, name, category, cost, lowStockThreshold);
+        BigDecimal costBigDecimal = BigDecimal.valueOf(cost);
+        return new ProductCreatedEvent(productId.toString(), name, category, costBigDecimal, lowStockThreshold);
     }
 
     /**
      * Creates an OrderPlacedEvent.
      *
-     * @param orderId The order ID
-     * @param items The list of order items
+     * @param orderId     The order ID
+     * @param customerId  The customer ID
+     * @param totalAmount The total amount of the order
+     * @param items       The list of order items
+     * @param address     The delivery address
      * @return A new OrderPlacedEvent instance
      */
     public static OrderPlacedEvent createOrderPlacedEvent(
             UUID orderId,
-            List<OrderPlacedEvent.OrderItem> items) {
-        OrderPlacedEvent event = new OrderPlacedEvent();
-        event.setOrderId(orderId);
-        event.setItems(items);
-        return event;
+            String customerId,
+            double totalAmount,
+            List<OrderItem> items,
+            DeliveryAddress address) {
+        BigDecimal totalAmountBigDecimal = BigDecimal.valueOf(totalAmount);
+        return new OrderPlacedEvent(orderId.toString(), customerId, totalAmountBigDecimal, items, address);
     }
 
+
     /**
-     * Creates an OrderPackagingCompletedEvent.
+     * Creates an OrderPackagedEvent.
      *
-     * @param timestamp The timestamp of the event
      * @param orderId The order ID
-     * @param packagedByUserId The ID of the user who packaged the order
      * @return A new OrderPackagingCompletedEvent instance
      */
-    public static OrderPackagingCompletedEvent createOrderPackagingCompletedEvent(
-            LocalDateTime timestamp,
-            UUID orderId,
-            UUID packagedByUserId) {
-        return new OrderPackagingCompletedEvent(timestamp, orderId, packagedByUserId);
+    public static OrderPackagedEvent createOrderPackagingCompletedEvent(
+            UUID orderId) {
+        return new OrderPackagedEvent(orderId.toString());
     }
 
     /**
      * Creates an OrderAssignedEvent.
      *
-     * @param timestamp The timestamp of the event
-     * @param orderId The order ID
-     * @param taskId The task ID
+     * @param orderId   The order ID
      * @param courierId The courier ID
      * @return A new OrderAssignedEvent instance
      */
-    public static OrderAssignedEvent createOrderAssignedEvent(
-            LocalDateTime timestamp,
+    public static OrderAssignedToCourierEvent createOrderAssignedToCourierEvent(
             UUID orderId,
-            UUID taskId,
             UUID courierId) {
-        return new OrderAssignedEvent(timestamp, orderId, taskId, courierId);
+        return new OrderAssignedToCourierEvent(orderId.toString(), courierId.toString());
+    }
+//
+//    /**
+//     * Creates an InventorySnapshotEvent.
+//     *
+//     * @param timestamp The timestamp of the event
+//     * @param warehouseId The warehouse ID
+//     * @param products The list of product snapshots
+//     * @return A new InventorySnapshotEvent instance
+//     */
+//    public static InventorySnapshotEvent createInventorySnapshotEvent(
+//            LocalDateTime timestamp,
+//            UUID warehouseId,
+//            List<InventorySnapshotEvent.ProductSnapshot> products) {
+//        return new InventorySnapshotEvent(timestamp, warehouseId, products);
+//    }
+//
+//    /**
+//     * Creates an ErpRestockEvent.
+//     *
+//     * @param productId The product ID
+//     * @param missingQuantity The missing quantity
+//     * @return A new ErpRestockEvent instance
+//     */
+//    public static ErpRestockEvent createErpRestockEvent(
+//            UUID productId,
+//            int missingQuantity) {
+//        return new ErpRestockEvent(productId, missingQuantity);
+//    }
+//
+
+    /**
+     * Helper method to create an OrderItem for OrderPlacedEvent.
+     *
+     * @param productId    The product ID
+     * @param quantity     The quantity
+     * @param pricePerUnit The price per unit
+     * @return A new OrderItem instance
+     */
+    public static OrderItem createOrderItem(UUID productId, int quantity, BigDecimal pricePerUnit) {
+        return new OrderItem(productId.toString(), quantity, pricePerUnit);
     }
 
     /**
      * Creates an InventorySnapshotEvent.
      *
-     * @param timestamp The timestamp of the event
-     * @param warehouseId The warehouse ID
-     * @param products The list of product snapshots
-     * @return A new InventorySnapshotEvent instance
+     * @param orderId         The order id
+     * @param customerId      The customer id
+     * @param totalAmount     The total amount
+     * @param items           List of Order Items
+     * @param deliveryAddress The delivery Address
+     * @return OrderPlacedEvent
      */
-    public static InventorySnapshotEvent createInventorySnapshotEvent(
-            LocalDateTime timestamp,
-            UUID warehouseId,
-            List<InventorySnapshotEvent.ProductSnapshot> products) {
-        return new InventorySnapshotEvent(timestamp, warehouseId, products);
+    public static OrderPlacedEvent createOrderPlacedEvent(String orderId, String customerId, BigDecimal totalAmount, List<OrderItem> items, DeliveryAddress deliveryAddress) {
+        return new OrderPlacedEvent(orderId, customerId, totalAmount, items, deliveryAddress);
     }
 
-    /**
-     * Creates an ErpRestockEvent.
-     *
-     * @param productId The product ID
-     * @param missingQuantity The missing quantity
-     * @return A new ErpRestockEvent instance
-     */
-    public static ErpRestockEvent createErpRestockEvent(
-            UUID productId,
-            int missingQuantity) {
-        return new ErpRestockEvent(productId, missingQuantity);
-    }
 
     /**
-     * Helper method to create an OrderItem for OrderPlacedEvent.
+     * Helper method to create a DeliveryAddress for OrderPlacedEvent.
      *
-     * @param productId The product ID
-     * @param quantity The quantity
-     * @return A new OrderItem instance
+     * @param street  The street address
+     * @param city    The city
+     * @param state   The state
+     * @param zipCode The zip code
+     * @param country The country
+     * @return A new DeliveryAddress instance
      */
-    public static OrderPlacedEvent.OrderItem createOrderItem(
-            UUID productId,
-            int quantity) {
-        OrderPlacedEvent.OrderItem item = new OrderPlacedEvent.OrderItem();
-        item.setProductId(productId);
-        item.setQuantity(quantity);
-        return item;
+    public static DeliveryAddress createDeliveryAddress(
+            String street,
+            String city,
+            String state,
+            String zipCode,
+            String country) {
+        return new DeliveryAddress(street, city, state, zipCode, country);
     }
 
-    /**
-     * Helper method to create a ProductSnapshot for InventorySnapshotEvent.
-     *
-     * @param productId The product ID
-     * @param currentQuantity The current quantity
-     * @return A new ProductSnapshot instance
-     */
-    public static InventorySnapshotEvent.ProductSnapshot createProductSnapshot(
-            UUID productId,
-            int currentQuantity) {
-        return new InventorySnapshotEvent.ProductSnapshot(productId, currentQuantity);
-    }
+//    /**
+//     * Helper method to create a ProductSnapshot for InventorySnapshotEvent.
+//     *
+//     * @param productId       The product ID
+//     * @param currentQuantity The current quantity
+//     * @return A new ProductSnapshot instance
+//     */
+//    public static InventorySnapshotEvent.ProductSnapshot createProductSnapshot(
+//            UUID productId,
+//            int currentQuantity) {
+//        return new InventorySnapshotEvent.ProductSnapshot(productId, currentQuantity);
+//    }
 }
