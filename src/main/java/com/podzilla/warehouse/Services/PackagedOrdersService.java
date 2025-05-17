@@ -1,7 +1,6 @@
 package com.podzilla.warehouse.Services;
 
 import com.podzilla.warehouse.Events.EventFactory;
-import com.podzilla.warehouse.Events.OrderPackagingCompletedEvent;
 import com.podzilla.warehouse.Models.PackagedOrders;
 import com.podzilla.warehouse.Repositories.PackagedOrdersRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,16 +1,14 @@
 package com.podzilla.warehouse.Services;
 
+import com.podzilla.mq.EventPublisher;
+import com.podzilla.mq.EventsConstants;
+import com.podzilla.mq.events.OrderAssignedToCourierEvent;
 import com.podzilla.warehouse.Events.EventFactory;
-import com.podzilla.warehouse.Events.OrderAssignedEvent;
 import com.podzilla.warehouse.Models.AssignedOrders;
 import com.podzilla.warehouse.Repositories.AssignedOrdersRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.Podzilla.mq.EventPublisher; // Adjust package if needed
-import com.Podzilla.mq.EventsConstants; // Adjust package if needed
-import com.Podzilla.mq.payloads.CourierRegisteredEvent; // Adjust package if needed
-
 
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +17,16 @@ import java.util.UUID;
 @Service
 public class AssignedOrdersService {
     private final EventPublisher eventPublisher;
+
     @Autowired
     private AssignedOrdersRepository assignedOrdersRepository;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    public AssignedOrdersService(EventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     public Optional<List<AssignedOrders>> findByOrderId(UUID orderId) {
         return Optional.ofNullable(assignedOrdersRepository.findByOrderId(orderId));
@@ -41,11 +44,9 @@ public class AssignedOrdersService {
         AssignedOrders assignment = new AssignedOrders(orderId, AssignerID, courierId);
         assignedOrdersRepository.save(assignment);
 
-        OrderAssignedEvent event = EventFactory.createOrderAssignedEvent(
-                assignment.getAssignedAt(), orderId, AssignerID, courierId
-        );
+        OrderAssignedToCourierEvent event = EventFactory.createOrderAssignedEvent(orderId, courierId);
 
-//        eventPublisher.publishEvent(EventsConstants.COURIER_REGISTERED, payload);
+        eventPublisher.publishEvent(EventsConstants.ORDER_ASSIGNED_TO_COURIER, event);
 
         rabbitTemplate.convertAndSend("analytics.exchange", "analytics.order.assigned", event);
         return assignment;

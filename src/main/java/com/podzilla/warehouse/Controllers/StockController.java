@@ -1,6 +1,5 @@
 package com.podzilla.warehouse.Controllers;
 
-import com.podzilla.warehouse.Events.InventorySnapshotEvent;
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,13 +74,13 @@ public class StockController {
         return stocks.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(stocks);
     }
 
-    @Operation(summary = "Generate inventory snapshot for Analytics Service")
-    @GetMapping("/snapshot")
-    public ResponseEntity<InventorySnapshotEvent> getInventorySnapshot(@RequestParam UUID warehouseId) {
-        log.info("Generating inventory snapshot for warehouseId={}", warehouseId);
-        InventorySnapshotEvent snapshot = stockService.generateSnapshot(warehouseId);
-        return ResponseEntity.ok(snapshot);
-    }
+//    @Operation(summary = "Generate inventory snapshot for Analytics Service")
+//    @GetMapping("/snapshot")
+//    public ResponseEntity<InventorySnapshotEvent> getInventorySnapshot(@RequestParam UUID warehouseId) {
+//        log.info("Generating inventory snapshot for warehouseId={}", warehouseId);
+//        InventorySnapshotEvent snapshot = stockService.generateSnapshot(warehouseId);
+//        return ResponseEntity.ok(snapshot);
+//    }
 
     @Operation(summary = "Update stock details")
     @PutMapping("/{id}")

@@ -1,8 +1,6 @@
 package com.podzilla.warehouse.Services;
 
 import com.podzilla.warehouse.Events.EventFactory;
-import com.podzilla.warehouse.Events.InventorySnapshotEvent;
-import com.podzilla.warehouse.Events.ProductEvent;
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Repositories.StockRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -26,16 +24,16 @@ public class StockService {
         Stock stock = new Stock(name, quantity, threshold, category, cost);
         Stock saved = stockRepository.save(stock);
 
-        ProductEvent event = EventFactory.createProductEvent(
-                LocalDateTime.now(),
-                saved.getId(),
-                saved.getName(),
-                saved.getCategory(),
-                saved.getPrice(),
-                saved.getThreshold()
-        );
+//        ProductEvent event = EventFactory.createProductEvent(
+//                LocalDateTime.now(),
+//                saved.getId(),
+//                saved.getName(),
+//                saved.getCategory(),
+//                saved.getPrice(),
+//                saved.getThreshold()
+//        );
 
-        rabbitTemplate.convertAndSend("analytics.exchange", "analytics.product.changed", event);
+//        rabbitTemplate.convertAndSend("analytics.exchange", "analytics.product.changed", event);
 
         return saved;
     }
@@ -71,27 +69,27 @@ public class StockService {
 
                     Stock updated = stockRepository.save(stock);
 
-                    ProductEvent event = EventFactory.createProductEvent(
-                            LocalDateTime.now(),
-                            updated.getId(),
-                            updated.getName(),
-                            updated.getCategory(),
-                            updated.getPrice(),
-                            updated.getThreshold()
-                    );
-                    rabbitTemplate.convertAndSend("analytics.exchange", "analytics.product.changed", event);
+//                    ProductEvent event = EventFactory.createProductEvent(
+//                            LocalDateTime.now(),
+//                            updated.getId(),
+//                            updated.getName(),
+//                            updated.getCategory(),
+//                            updated.getPrice(),
+//                            updated.getThreshold()
+//                    );
+//                    rabbitTemplate.convertAndSend("analytics.exchange", "analytics.product.changed", event);
 
                     return updated;
                 });
     }
 
-    public InventorySnapshotEvent generateSnapshot(UUID warehouseId) {
-        List<InventorySnapshotEvent.ProductSnapshot> productSnapshots = stockRepository.findAll().stream()
-                .map(stock -> EventFactory.createProductSnapshot(stock.getId(), stock.getQuantity()))
-                .toList();
-
-        return EventFactory.createInventorySnapshotEvent(LocalDateTime.now(), warehouseId, productSnapshots);
-    }
+//    public InventorySnapshotEvent generateSnapshot(UUID warehouseId) {
+//        List<InventorySnapshotEvent.ProductSnapshot> productSnapshots = stockRepository.findAll().stream()
+//                .map(stock -> EventFactory.createProductSnapshot(stock.getId(), stock.getQuantity()))
+//                .toList();
+//
+//        return EventFactory.createInventorySnapshotEvent(LocalDateTime.now(), warehouseId, productSnapshots);
+//    }
 
     public boolean deleteStock(UUID id) {
         if (stockRepository.existsById(id)) {
