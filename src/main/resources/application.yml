@@ -65,12 +65,3 @@ spring:
 appconfig:
   cache:
     enabled: true
-
-management:
-  endpoints:
-    web:
-      base-path: /api/actuator
-      exposure:
-        include: "*"
-    health:
-      show-details: always
