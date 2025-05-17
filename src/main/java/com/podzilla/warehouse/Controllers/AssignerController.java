@@ -1,5 +1,6 @@
 package com.podzilla.warehouse.Controllers;
 
+import com.podzilla.warehouse.Commands.AssignOrderCommand;
 import com.podzilla.warehouse.Models.AssignedOrders;
 import com.podzilla.warehouse.Services.AssignedOrdersService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,8 +26,12 @@ public class AssignerController {
     public ResponseEntity<AssignedOrders> assignOrder(@RequestParam UUID orderId,
                                                       @RequestParam UUID assignerId,
                                                       @RequestParam UUID courierId) {
-        log.info("Received assignment request: orderId={}, taskId={}, courierId={}", orderId, assignerId, courierId);
-        AssignedOrders assigned = assignerService.assignOrder(orderId, assignerId, courierId);
+        log.info("Received assignment request: orderId={}, assignerId={}, courierId={}", orderId, assignerId, courierId);
+
+        AssignOrderCommand command = new AssignOrderCommand(assignerService, orderId, assignerId, courierId);
+        command.execute();
+
+        AssignedOrders assigned = command.getAssignedOrderResult();
         return ResponseEntity.ok(assigned);
     }
 

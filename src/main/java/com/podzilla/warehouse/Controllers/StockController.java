@@ -1,5 +1,7 @@
 package com.podzilla.warehouse.Controllers;
 
+import com.podzilla.warehouse.Commands.CreateStockCommand;
+import com.podzilla.warehouse.Events.InventorySnapshotEvent;
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +30,16 @@ public class StockController {
                                              @RequestParam Integer threshold,
                                              @RequestParam String category,
                                              @RequestParam Double cost) {
-        log.info("Creating stock: name={}, quantity={}, threshold={}, category={}, cost={}",
+        log.info("Received request to create stock: name={}, quantity={}, threshold={}, category={}, cost={}",
                 name, quantity, threshold, category, cost);
-        Stock stock = stockService.createStock(name, quantity, threshold, category, cost);
-        return ResponseEntity.status(HttpStatus.CREATED).body(stock);
+
+        CreateStockCommand createStockCommand = new CreateStockCommand(stockService, name, quantity, threshold, category, cost);
+
+        createStockCommand.execute();
+
+        Stock createdStock = createStockCommand.getCreatedStock();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
     }
 
     @Operation(summary = "Get all stock items")
@@ -74,13 +82,13 @@ public class StockController {
         return stocks.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(stocks);
     }
 
-//    @Operation(summary = "Generate inventory snapshot for Analytics Service")
-//    @GetMapping("/snapshot")
-//    public ResponseEntity<InventorySnapshotEvent> getInventorySnapshot(@RequestParam UUID warehouseId) {
-//        log.info("Generating inventory snapshot for warehouseId={}", warehouseId);
-//        InventorySnapshotEvent snapshot = stockService.generateSnapshot(warehouseId);
-//        return ResponseEntity.ok(snapshot);
-//    }
+    @Operation(summary = "Generate inventory snapshot for Analytics Service")
+    @GetMapping("/snapshot")
+    public ResponseEntity<InventorySnapshotEvent> getInventorySnapshot(@RequestParam UUID warehouseId) {
+        log.info("Generating inventory snapshot for warehouseId={}", warehouseId);
+        InventorySnapshotEvent snapshot = stockService.generateSnapshot(warehouseId);
+        return ResponseEntity.ok(snapshot);
+    }
 
     @Operation(summary = "Update stock details")
     @PutMapping("/{id}")
