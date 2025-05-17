@@ -68,7 +68,6 @@ public class DatabaseSeederController {
                 new Manager("Jennifer White", "jennifer.white@podzilla.com", "Distribution", "555-3456"),
                 new Manager("Kevin Lee", "kevin.lee@podzilla.com", "Inventory")
         );
-
         managerRepository.saveAll(managers);
         return ResponseEntity.ok("Managers seeded successfully!");
     }
@@ -118,30 +117,35 @@ public class DatabaseSeederController {
 
         // Create some sample packaged orders
         LocalDateTime now = LocalDateTime.now();
-        PackagedOrders order1 = new PackagedOrders(UUID.randomUUID(), packagers.get(0).getId(), now.minusDays(1));
-        PackagedOrders order2 = new PackagedOrders(UUID.randomUUID(), packagers.get(1).getId(), now.minusDays(2));
-        PackagedOrders order3 = new PackagedOrders(UUID.randomUUID(), packagers.get(2).getId(), now.minusHours(12));
+//        PackagedOrders order1 = new PackagedOrders(UUID.randomUUID(), packagers.get(0).getId(), now.minusDays(1));
+//        PackagedOrders order2 = new PackagedOrders(UUID.randomUUID(), packagers.get(1).getId(), now.minusDays(2));
+//        PackagedOrders order3 = new PackagedOrders(UUID.randomUUID(), packagers.get(2).getId(), now.minusHours(12));
+
+        PackagedOrders order1 = new PackagedOrders(packagers.get(0).getId());
+        PackagedOrders order2 = new PackagedOrders(packagers.get(1).getId());
+        PackagedOrders order3 = new PackagedOrders(packagers.get(2).getId());
+
         PackagedOrders order4 = new PackagedOrders(packagers.get(3).getId());
         PackagedOrders order5 = new PackagedOrders(packagers.get(4).getId());
 
         packagedOrdersRepository.saveAll(Arrays.asList(order1, order2, order3, order4, order5));
 
         // Create some assigned orders
-        AssignedOrders assignment1 = new AssignedOrders(
-                order1.getOrderId(),
-                assigners.get(0).getId(),
-                UUID.randomUUID(),
-                now.minusHours(2)
-        );
-
-        AssignedOrders assignment2 = new AssignedOrders(
-                order2.getOrderId(),
-                assigners.get(1).getId(),
-                UUID.randomUUID(),
-                now.minusHours(4)
-        );
-
-        assignedOrdersRepository.saveAll(Arrays.asList(assignment1, assignment2));
+//        AssignedOrders assignment1 = new AssignedOrders(
+//                order1.getOrderId(),
+//                assigners.get(0).getId(),
+//                UUID.randomUUID(),
+//                now.minusHours(2)
+//        );
+//
+//        AssignedOrders assignment2 = new AssignedOrders(
+//                order2.getOrderId(),
+//                assigners.get(1).getId(),
+//                UUID.randomUUID(),
+//                now.minusHours(4)
+//        );
+//
+//        assignedOrdersRepository.saveAll(Arrays.asList(assignment1, assignment2));
 
         return ResponseEntity.ok("Sample orders seeded successfully!");
     }

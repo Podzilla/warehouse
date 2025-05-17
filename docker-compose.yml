@@ -7,7 +7,6 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - warehouse_db
       - redis
       - rabbitmq
     env_file:
@@ -17,15 +16,15 @@ services:
       - ./logs:/logs
     command: [ "java", "-jar", "/app/warehouse-0.0.1-SNAPSHOT.jar" ]
 
-  warehouse_db:
-    image: postgres:latest
-    container_name: warehouse_db
-    environment:
-      POSTGRES_DB: warehouseDB
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
+#  warehouse_db:
+#    image: postgres:latest
+#    container_name: warehouse_db
+#    environment:
+#      POSTGRES_DB: warehouseDB
+#      POSTGRES_USER: sa
+#      POSTGRES_PASSWORD: sa
+#    ports:
+#      - "5432:5432"
 
   redis:
     image: redis:latest

@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 @Repository
-public interface PackagedOrdersRepository extends JpaRepository<PackagedOrders, Long> {
+public interface PackagedOrdersRepository extends JpaRepository<PackagedOrders, UUID> {
     Page<PackagedOrders> findByPackagerIdIsNull(Pageable pageable);
     Page<PackagedOrders> findByPackagerId(UUID packagerId, Pageable pageable);
     Page<PackagedOrders> findByOrderId(UUID orderId, Pageable pageable);
