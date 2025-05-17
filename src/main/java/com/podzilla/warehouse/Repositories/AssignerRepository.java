@@ -13,10 +13,4 @@ import java.util.UUID;
 @Repository
 public interface AssignerRepository extends JpaRepository<Assigner, UUID> {
 
-    Optional<Assigner> createAssigner(Assigner assigner);
-    Page<Assigner> getAllAssigners(Pageable pageable);
-    boolean deleteAssigner(UUID id);
-    Optional<Assigner> activateAssigner(UUID id);
-    Optional<Assigner> deactivateAssigner(UUID id);
-
 }
