@@ -6,6 +6,7 @@ import com.podzilla.warehouse.Repositories.PackagedOrdersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -15,10 +16,7 @@ public class OrderPlacedEventHandler implements EventHandler<OrderPlacedEvent> {
 
     @Override
     public void handle(OrderPlacedEvent event) {
-        //create packaged order
         PackagedOrders packagedOrder = new PackagedOrders(UUID.fromString(event.getOrderId()));
         packagedOrdersRepository.save(packagedOrder);
-        
-        //TODO: send inventory updated event
     }
 }

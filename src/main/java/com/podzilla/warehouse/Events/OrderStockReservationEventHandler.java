@@ -9,6 +9,8 @@ import com.podzilla.warehouse.Services.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -40,24 +42,23 @@ public class OrderStockReservationEventHandler implements EventHandler<OrderStoc
         }
 
         if (allAvailable) {
+            List<ProductSnapshot> snapshots = new ArrayList<>();
             for (OrderItem item : event.getItems()) {
                 UUID productId = UUID.fromString(item.getProductId());
                 Stock stock = stockRepository.findById(productId)
                         .orElseThrow(() -> new IllegalArgumentException("Unknown product " + item.getProductId()));
+                int newQuantity = stock.getQuantity() - item.getQuantity();
 
-                stockService.updateStock(
-                        productId,
-                        null,
-                        stock.getQuantity() - item.getQuantity(),
-                        null,
-                        null,
-                        null
-                );
+                stockService.updateStock(productId, null, newQuantity, null, null, null);
+
+                snapshots.add(EventFactory.createProductSnapshot(item.getProductId(), newQuantity));
             }
-            
+
             WarehouseStockReservedEvent stockReservedEvent = EventFactory.createWarehouseStockReservedEvent(event.getOrderId());
             eventPublisher.publishEvent(EventsConstants.WAREHOUSE_STOCK_RESERVED, stockReservedEvent);
 
+            InventoryUpdatedEvent inventoryUpdatedEvent = EventFactory.createInventoryUpdatedEvent(snapshots);
+            eventPublisher.publishEvent(EventsConstants.INVENTORY_UPDATED, inventoryUpdatedEvent);
         }
     }
 }
