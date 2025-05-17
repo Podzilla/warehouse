@@ -46,7 +46,7 @@ public class StockService {
         return saved;
     }
 
-    //@Cacheable(value = "stocksAll")
+    @Cacheable(value = "stocksAll")
     public List<Stock> getAllStocks() {
         return stockRepository.findAll();
     }

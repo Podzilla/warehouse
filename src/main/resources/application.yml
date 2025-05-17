@@ -62,3 +62,6 @@ spring:
     livereload:
       enabled: true
 
+appconfig:
+  cache:
+    enabled: true

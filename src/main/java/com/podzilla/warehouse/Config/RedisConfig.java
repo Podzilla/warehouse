@@ -1,65 +1,62 @@
 package com.podzilla.warehouse.Config;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
-import com.podzilla.warehouse.Models.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.support.NoOpCacheManager;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-
-import java.time.Duration;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.*;
 
 @Configuration
 public class RedisConfig {
 
-    private static final int CACHE_TTL = 60 * 60;
+    @Bean
+    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<Object, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        // Configure ObjectMapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // Set the Jackson serializer with JavaTimeModule
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        serializer.setObjectMapper(mapper);
+
+        // Apply to both keys and values
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(serializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
 
     @Bean
-    public CacheManager cacheManager(
-            final RedisConnectionFactory redisConnectionFactory,
-            @Value("${appconfig.cache.enabled}") final String cacheEnabled) {
-
-        if (!Boolean.parseBoolean(cacheEnabled)) {
-            return new NoOpCacheManager();
-        }
-
-        // ✅ Configure a custom ObjectMapper to handle multiple model classes
+    public RedisCacheConfiguration cacheConfiguration() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.activateDefaultTyping(
-                BasicPolymorphicTypeValidator.builder()
-                        .allowIfSubType(Stock.class)
-                        .allowIfSubType(Manager.class)
-                        .allowIfSubType(Packager.class)
-                        .allowIfSubType(Assigner.class)
-                        .allowIfSubType(AssignedOrders.class)
-                        .allowIfSubType(PackagedOrders.class)
-                        .build(),
-                ObjectMapper.DefaultTyping.NON_FINAL,
-                JsonTypeInfo.As.PROPERTY
-        );
+        mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
 
-        Jackson2JsonRedisSerializer<Object> serializer =
-                new Jackson2JsonRedisSerializer<>(mapper, Object.class);
+        // Register JavaTimeModule for LocalDateTime support
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        RedisCacheConfiguration defaultConfig = RedisCacheConfiguration
-                .defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(CACHE_TTL))
-                .disableCachingNullValues()
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        serializer.setObjectMapper(mapper);
+
+        return RedisCacheConfiguration.defaultCacheConfig()
                 .serializeValuesWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(serializer)
                 );
-
-        return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(defaultConfig)
-                .build();
     }
+
 }
