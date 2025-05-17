@@ -107,27 +107,12 @@ public class DatabaseSeederController {
 
     @PostMapping("/sample-orders")
     public ResponseEntity<String> seedSampleOrders() {
-        // Get some packagers and assigners
-        List<Packager> packagers = packagerRepository.findAll();
-        List<Assigner> assigners = assignerRepository.findAll();
-
-        if (packagers.isEmpty() || assigners.isEmpty()) {
-            return ResponseEntity.badRequest().body("Please seed packagers and assigners first");
-        }
-
         // Create some sample packaged orders
-        LocalDateTime now = LocalDateTime.now();
-//        PackagedOrders order1 = new PackagedOrders(UUID.randomUUID(), packagers.get(0).getId(), now.minusDays(1));
-//        PackagedOrders order2 = new PackagedOrders(UUID.randomUUID(), packagers.get(1).getId(), now.minusDays(2));
-//        PackagedOrders order3 = new PackagedOrders(UUID.randomUUID(), packagers.get(2).getId(), now.minusHours(12));
-
-        PackagedOrders order1 = new PackagedOrders(packagers.get(0).getId());
-        PackagedOrders order2 = new PackagedOrders(packagers.get(1).getId());
-        PackagedOrders order3 = new PackagedOrders(packagers.get(2).getId());
-
-        PackagedOrders order4 = new PackagedOrders(packagers.get(3).getId());
-        PackagedOrders order5 = new PackagedOrders(packagers.get(4).getId());
-
+        PackagedOrders order1 = new PackagedOrders(UUID.randomUUID());
+        PackagedOrders order2 = new PackagedOrders(UUID.randomUUID());
+        PackagedOrders order3 = new PackagedOrders(UUID.randomUUID());
+        PackagedOrders order4 = new PackagedOrders(UUID.randomUUID());
+        PackagedOrders order5 = new PackagedOrders(UUID.randomUUID());
         packagedOrdersRepository.saveAll(Arrays.asList(order1, order2, order3, order4, order5));
 
         // Create some assigned orders

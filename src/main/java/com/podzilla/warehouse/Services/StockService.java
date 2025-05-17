@@ -25,9 +25,6 @@ public class StockService {
     @Autowired
     private StockRepository stockRepository;
 
-//    @Autowired
-//    private RabbitTemplate rabbitTemplate;
-
     public StockService(EventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
@@ -46,8 +43,6 @@ public class StockService {
         );
 
         eventPublisher.publishEvent(EventsConstants.PRODUCT_CREATED, event);
-
-//        rabbitTemplate.convertAndSend("analytics.exchange", "analytics.product.changed", event);
 
         return saved;
     }
@@ -102,8 +97,6 @@ public class StockService {
                     );
 
                     eventPublisher.publishEvent(EventsConstants.PRODUCT_CREATED, event);
-                    
-//                    rabbitTemplate.convertAndSend("analytics.exchange", "analytics.product.changed", event);
 
                     return updated;
                 });

@@ -41,11 +41,34 @@ public class EventFactory {
     public static OrderPlacedEvent createOrderPlacedEvent(
             UUID orderId,
             String customerId,
-            double totalAmount,
             List<OrderItem> items,
-            DeliveryAddress address) {
+            DeliveryAddress address,
+            double totalAmount,
+            double orderLatitude,
+            double orderLongitude,
+            String signature,
+            ConfirmationType confirmationType) {
         BigDecimal totalAmountBigDecimal = BigDecimal.valueOf(totalAmount);
-        return new OrderPlacedEvent(orderId.toString(), customerId, totalAmountBigDecimal, items, address);
+        return new OrderPlacedEvent(orderId.toString(),
+                customerId,
+                items,
+                address,
+                totalAmountBigDecimal,
+                orderLatitude,
+                orderLongitude,
+                signature,
+                confirmationType
+        );
+    }
+
+    /**
+     * Creates a WarehouseStockReservedEvent.
+     *
+     * @param orderId The product ID
+     * @return A new WarehouseStockReservedEvent instance
+     */
+    public static WarehouseStockReservedEvent createWarehouseStockReservedEvent(String orderId) {
+        return new WarehouseStockReservedEvent(orderId);
     }
 
 
@@ -70,11 +93,21 @@ public class EventFactory {
     public static OrderAssignedToCourierEvent createOrderAssignedToCourierEvent(
             UUID orderId,
             UUID courierId,
-            double price,
+            double totalAmount,
             double orderLatitude,
-            double orderLongitude) {
-        BigDecimal priceBigDecimal = BigDecimal.valueOf(price);
-        return new OrderAssignedToCourierEvent(orderId.toString(), courierId.toString(), priceBigDecimal, orderLatitude, orderLongitude);
+            double orderLongitude,
+            String signature,
+            ConfirmationType confirmationType) {
+        BigDecimal totalAmountBigDecimal = BigDecimal.valueOf(totalAmount);
+        return new OrderAssignedToCourierEvent(
+                orderId.toString(),
+                courierId.toString(),
+                totalAmountBigDecimal,
+                orderLatitude,
+                orderLongitude,
+                signature,
+                confirmationType
+        );
     }
 //
 //    /**
@@ -91,20 +124,20 @@ public class EventFactory {
 //            List<InventorySnapshotEvent.ProductSnapshot> products) {
 //        return new InventorySnapshotEvent(timestamp, warehouseId, products);
 //    }
-//
-//    /**
-//     * Creates an ErpRestockEvent.
-//     *
-//     * @param productId The product ID
-//     * @param missingQuantity The missing quantity
-//     * @return A new ErpRestockEvent instance
-//     */
-//    public static ErpRestockEvent createErpRestockEvent(
-//            UUID productId,
-//            int missingQuantity) {
-//        return new ErpRestockEvent(productId, missingQuantity);
-//    }
-//
+
+    /**
+     * Creates an WarehouseOrderFulfillmentFailedEvent.
+     *
+     * @param orderId The product ID
+     * @param reason  The missing quantity
+     * @return A new WarehouseOrderFulfillmentFailedEvent instance
+     */
+    public static WarehouseOrderFulfillmentFailedEvent createWarehouseOrderFulfillmentFailedEvent(
+            String orderId,
+            String reason) {
+        return new WarehouseOrderFulfillmentFailedEvent(orderId, reason);
+    }
+
 
     /**
      * Helper method to create an OrderItem for OrderPlacedEvent.
@@ -128,8 +161,29 @@ public class EventFactory {
      * @param deliveryAddress The delivery Address
      * @return OrderPlacedEvent
      */
-    public static OrderPlacedEvent createOrderPlacedEvent(String orderId, String customerId, BigDecimal totalAmount, List<OrderItem> items, DeliveryAddress deliveryAddress) {
-        return new OrderPlacedEvent(orderId, customerId, totalAmount, items, deliveryAddress);
+    public static OrderPlacedEvent createOrderPlacedEvent(
+            UUID orderId,
+            UUID customerId,
+            List<OrderItem> items,
+            DeliveryAddress deliveryAddress,
+            double totalAmount,
+            double orderLatitude,
+            double orderLongitude,
+            String signature,
+            ConfirmationType confirmationType
+    ) {
+        BigDecimal totalAmountBigDecimal = BigDecimal.valueOf(totalAmount);
+        return new OrderPlacedEvent(
+                orderId.toString(),
+                customerId.toString(),
+                items,
+                deliveryAddress,
+                totalAmountBigDecimal,
+                orderLatitude,
+                orderLongitude,
+                signature,
+                confirmationType
+        );
     }
 
 
@@ -152,16 +206,20 @@ public class EventFactory {
         return new DeliveryAddress(street, city, state, zipCode, country);
     }
 
-//    /**
-//     * Helper method to create a ProductSnapshot for InventorySnapshotEvent.
-//     *
-//     * @param productId       The product ID
-//     * @param currentQuantity The current quantity
-//     * @return A new ProductSnapshot instance
-//     */
-//    public static InventorySnapshotEvent.ProductSnapshot createProductSnapshot(
-//            UUID productId,
-//            int currentQuantity) {
-//        return new InventorySnapshotEvent.ProductSnapshot(productId, currentQuantity);
-//    }
+    public static InventoryUpdatedEvent createInventoryUpdatedEvent(List<ProductSnapshot> products) {
+        return new InventoryUpdatedEvent(products);
+    }
+
+    /**
+     * Helper method to create a ProductSnapshot for InventorySnapshotEvent.
+     *
+     * @param productId   The product ID
+     * @param newQuantity The current quantity
+     * @return A new ProductSnapshot instance
+     */
+    public static ProductSnapshot createProductSnapshot(
+            String productId,
+            int newQuantity) {
+        return new ProductSnapshot(productId, newQuantity);
+    }
 }

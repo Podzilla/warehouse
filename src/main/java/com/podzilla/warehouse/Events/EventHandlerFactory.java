@@ -1,8 +1,9 @@
 package com.podzilla.warehouse.Events;
 
 import com.podzilla.mq.events.BaseEvent;
-import com.podzilla.mq.events.CourierRegisteredEvent;
 import com.podzilla.mq.events.OrderPlacedEvent;
+import com.podzilla.mq.events.OrderStockReservationRequestedEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -11,10 +12,11 @@ import java.util.HashMap;
 public class EventHandlerFactory {
     private final HashMap<Class<? extends BaseEvent>, EventHandler<? extends BaseEvent>> handlers;
 
-    public EventHandlerFactory() {
+    @Autowired
+    public EventHandlerFactory(OrderPlacedEventHandler OrderPlacedEventHandler,OrderStockReservationEventHandler orderStockReservationEventHandler) {
         handlers = new HashMap<>();
-        handlers.put(CourierRegisteredEvent.class, new CourierRegisteredEventHandler());
-        handlers.put(OrderPlacedEvent.class, new OrderPlacedEventHandler());
+        handlers.put(OrderPlacedEvent.class, OrderPlacedEventHandler);
+        handlers.put(OrderStockReservationRequestedEvent.class, orderStockReservationEventHandler);
     }
 
     @SuppressWarnings("unchecked")
