@@ -1,15 +1,24 @@
 package com.podzilla.warehouse.Services;
 
+import com.podzilla.mq.EventPublisher;
+import com.podzilla.mq.EventsConstants;
+import com.podzilla.mq.events.OrderItem;
+import com.podzilla.mq.events.OrderPlacedEvent;
 import com.podzilla.warehouse.Models.Manager;
 import com.podzilla.warehouse.Repositories.ManagerRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 @CacheConfig(cacheNames = {"managers"})
 public class ManagerService {

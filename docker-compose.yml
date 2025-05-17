@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   warehouse-backend:
     image: openjdk:25-ea-4-jdk-oraclelinux9

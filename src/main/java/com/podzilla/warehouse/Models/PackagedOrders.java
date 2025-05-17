@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,7 +16,6 @@ import java.util.UUID;
 @Table()
 public class PackagedOrders {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID orderId;
 
     private UUID packagerId;
@@ -31,9 +29,8 @@ public class PackagedOrders {
         this.packagedAt = packagedAt;
     }
 
-    public PackagedOrders(UUID packagerId) {
-        this.packagerId = packagerId;
+    public PackagedOrders(UUID orderId) {
+        this.orderId = orderId;
         this.packagedAt = LocalDateTime.now();
     }
-
 }
