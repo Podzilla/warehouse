@@ -1,5 +1,6 @@
 package com.podzilla.warehouse.Events;
 
+import com.podzilla.mq.events.OrderDeliveryFailedEvent;
 import com.podzilla.mq.events.OrderPlacedEvent;
 import com.podzilla.warehouse.Models.PackagedOrders;
 import com.podzilla.warehouse.Repositories.PackagedOrdersRepository;
@@ -10,12 +11,10 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
-public class OrderPlacedEventHandler implements EventHandler<OrderPlacedEvent> {
-    private final PackagedOrdersRepository packagedOrdersRepository;
+public class OrderDeliveryFailedHandler implements EventHandler<OrderDeliveryFailedEvent> {
 
     @Override
-    public void handle(OrderPlacedEvent event) {
-        PackagedOrders packagedOrder = new PackagedOrders(UUID.fromString(event.getOrderId()));
-        packagedOrdersRepository.save(packagedOrder);
+    public void handle(OrderDeliveryFailedEvent event) {
+        //TODO save this to db, add service and repository with crud operation and either reassign or publish fulfillment failed        
     }
 }
