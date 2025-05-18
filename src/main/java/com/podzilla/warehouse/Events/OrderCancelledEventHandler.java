@@ -5,6 +5,8 @@ import com.podzilla.mq.EventsConstants;
 import com.podzilla.mq.events.OrderCancelledEvent;
 import com.podzilla.mq.events.OrderItem;
 import com.podzilla.warehouse.Models.Stock;
+import com.podzilla.warehouse.Repositories.AssignedOrdersRepository;
+import com.podzilla.warehouse.Repositories.PackagedOrdersRepository;
 import com.podzilla.warehouse.Repositories.StockRepository;
 import com.podzilla.warehouse.Services.StockService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class OrderCancelledEventHandler implements EventHandler<OrderCancelledEv
     private static final Logger logger = LoggerFactory.getLogger(OrderCancelledEventHandler.class);
     private final StockService stockService;
     private final StockRepository stockRepository;
+    private final PackagedOrdersRepository packagedOrdersRepository;
+    private final AssignedOrdersRepository assignedOrdersRepository;
 
     @Override
     @Transactional
@@ -70,6 +74,10 @@ public class OrderCancelledEventHandler implements EventHandler<OrderCancelledEv
                 logger.info("Stock reverted for product ID: {}. Order ID: {}. Quantity reverted: {}. Old quantity: {}. New quantity: {}",
                         productId, event.getOrderId(), quantityToRevert, currentQuantity, newQuantity);
             }
+
+            UUID orderId = UUID.fromString(event.getOrderId());
+            packagedOrdersRepository.deleteById(orderId);
+            assignedOrdersRepository.deleteById(orderId);
 
             logger.info("Successfully reverted stock for all items in cancelled order ID: {}", event.getOrderId());
 
