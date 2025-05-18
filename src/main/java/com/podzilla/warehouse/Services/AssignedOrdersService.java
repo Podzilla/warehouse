@@ -48,20 +48,18 @@ public class AssignedOrdersService {
     @CachePut(key = "'orderId:' + #orderId")
     public AssignedOrders assignOrder(UUID orderId, UUID assignerId, UUID courierId) {
         PackagedOrders packagedOrder = packagedOrdersRepository.findOneByOrderId(orderId).get();
-        AssignedOrders assignment = new AssignedOrders(orderId, assignerId, courierId, packagedOrder.getItems(),
-                packagedOrder.getDeliveryAddress(), packagedOrder.getTotalAmount(), packagedOrder.getOrderLatitude(),
-                packagedOrder.getOrderLongitude(), packagedOrder.getSignature(), packagedOrder.getConfirmationType());
+        AssignedOrders assignment = new AssignedOrders(orderId, assignerId, courierId);
         assignedOrdersRepository.save(assignment);
 
         OrderAssignedToCourierEvent event = 
                 EventFactory.createOrderAssignedToCourierEvent(
                     orderId,
                     courierId, 
-                    assignment.getTotalAmount(),
-                    assignment.getOrderLatitude(),
-                    assignment.getOrderLongitude(),
-                    assignment.getSignature(),
-                    assignment.getConfirmationType()
+                    packagedOrder.getTotalAmount(),
+                    packagedOrder.getOrderLatitude(),
+                    packagedOrder.getOrderLongitude(),
+                    packagedOrder.getSignature(),
+                    packagedOrder.getConfirmationType()
                 );
 
         eventPublisher.publishEvent(EventsConstants.ORDER_ASSIGNED_TO_COURIER, event);

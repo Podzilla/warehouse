@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("/stock")
+@RequestMapping("/api/stock")
 public class StockController {
 
     @Autowired
