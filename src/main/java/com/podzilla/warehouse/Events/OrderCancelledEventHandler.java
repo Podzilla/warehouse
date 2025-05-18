@@ -2,8 +2,10 @@ package com.podzilla.warehouse.Events;
 
 import com.podzilla.mq.EventPublisher;
 import com.podzilla.mq.EventsConstants;
+import com.podzilla.mq.events.InventoryUpdatedEvent;
 import com.podzilla.mq.events.OrderCancelledEvent;
 import com.podzilla.mq.events.OrderItem;
+import com.podzilla.mq.events.ProductSnapshot;
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Repositories.AssignedOrdersRepository;
 import com.podzilla.warehouse.Repositories.PackagedOrdersRepository;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class OrderCancelledEventHandler implements EventHandler<OrderCancelledEv
     private final StockRepository stockRepository;
     private final PackagedOrdersRepository packagedOrdersRepository;
     private final AssignedOrdersRepository assignedOrdersRepository;
+    private final EventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -39,6 +43,7 @@ public class OrderCancelledEventHandler implements EventHandler<OrderCancelledEv
         }
 
         try {
+            ArrayList<ProductSnapshot> snapshots = new ArrayList<>();
             for (OrderItem item : event.getItems()) {
                 if (item.getProductId() == null || item.getQuantity() <= 0) {
                     logger.warn("Invalid item data in OrderCancelledEvent for order ID: {}. ProductId: {}, Quantity: {}. Skipping item.",
@@ -71,6 +76,8 @@ public class OrderCancelledEventHandler implements EventHandler<OrderCancelledEv
                         null
                 );
 
+                snapshots.add(EventFactory.createProductSnapshot(item.getProductId(), newQuantity));
+
                 logger.info("Stock reverted for product ID: {}. Order ID: {}. Quantity reverted: {}. Old quantity: {}. New quantity: {}",
                         productId, event.getOrderId(), quantityToRevert, currentQuantity, newQuantity);
             }
@@ -78,6 +85,9 @@ public class OrderCancelledEventHandler implements EventHandler<OrderCancelledEv
             UUID orderId = UUID.fromString(event.getOrderId());
             packagedOrdersRepository.deleteById(orderId);
             assignedOrdersRepository.deleteById(orderId);
+
+            InventoryUpdatedEvent inventoryUpdatedEvent = EventFactory.createInventoryUpdatedEvent(snapshots);
+            eventPublisher.publishEvent(EventsConstants.INVENTORY_UPDATED, inventoryUpdatedEvent);
 
             logger.info("Successfully reverted stock for all items in cancelled order ID: {}", event.getOrderId());
 
