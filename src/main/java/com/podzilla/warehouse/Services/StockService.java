@@ -100,6 +100,7 @@ public class StockService {
                 });
     }
 
+    //TODO
 //    public InventorySnapshotEvent generateSnapshot(UUID warehouseId) {
 //        List<InventorySnapshotEvent.ProductSnapshot> productSnapshots = stockRepository.findAll().stream()
 //                .map(stock -> EventFactory.createProductSnapshot(stock.getId(), stock.getQuantity()))

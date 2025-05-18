@@ -15,7 +15,10 @@ public class OrderPlacedEventHandler implements EventHandler<OrderPlacedEvent> {
 
     @Override
     public void handle(OrderPlacedEvent event) {
+        //create packaged order
         PackagedOrders packagedOrder = new PackagedOrders(UUID.fromString(event.getOrderId()));
         packagedOrdersRepository.save(packagedOrder);
+        
+        //TODO: send inventory updated event
     }
 }

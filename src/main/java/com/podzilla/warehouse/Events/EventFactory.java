@@ -109,6 +109,21 @@ public class EventFactory {
                 confirmationType
         );
     }
+//
+//    /**
+//     * Creates an InventorySnapshotEvent.
+//     *
+//     * @param timestamp The timestamp of the event
+//     * @param warehouseId The warehouse ID
+//     * @param products The list of product snapshots
+//     * @return A new InventorySnapshotEvent instance
+//     */
+//    public static InventorySnapshotEvent createInventorySnapshotEvent(
+//            LocalDateTime timestamp,
+//            UUID warehouseId,
+//            List<InventorySnapshotEvent.ProductSnapshot> products) {
+//        return new InventorySnapshotEvent(timestamp, warehouseId, products);
+//    }
 
     /**
      * Creates an WarehouseOrderFulfillmentFailedEvent.
@@ -191,12 +206,6 @@ public class EventFactory {
         return new DeliveryAddress(street, city, state, zipCode, country);
     }
 
-    /**
-     * Creates an InventoryUpdatedEvent.
-     *
-     * @param products The list of product snapshots
-     * @return A new InventoryUpdatedEvent instance
-     */
     public static InventoryUpdatedEvent createInventoryUpdatedEvent(List<ProductSnapshot> products) {
         return new InventoryUpdatedEvent(products);
     }
