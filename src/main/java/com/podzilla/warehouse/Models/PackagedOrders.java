@@ -53,4 +53,17 @@ public class PackagedOrders {
         this.packagedAt = LocalDateTime.now();
 
     }
+    public PackagedOrders(UUID orderId, UUID packagerId, List<Stock> items, DeliveryAddress deliveryAddress,
+                          BigDecimal totalAmount, double orderLatitude, double orderLongitude, String signature,
+                          ConfirmationType confirmationType) {
+        this.orderId = orderId;
+        this.packagerId = packagerId;
+        this.items = items;
+        this.deliveryAddress = deliveryAddress;
+        this.totalAmount = totalAmount;
+        this.orderLatitude = orderLatitude;
+        this.orderLongitude = orderLongitude;
+        this.signature = signature;
+        this.confirmationType = confirmationType;
+    }
 }
