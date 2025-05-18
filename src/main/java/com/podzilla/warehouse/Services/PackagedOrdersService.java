@@ -48,7 +48,7 @@ public class PackagedOrdersService {
     public Optional<PackagedOrders> packageOrder(UUID orderId,UUID packagerId) {
         PackagedOrders packagedOrder = new PackagedOrders(orderId, packagerId, LocalDateTime.now());
 
-        OrderPackagedEvent event = EventFactory.createOrderPackagedEvent(orderId);
+        OrderPackagedEvent event = EventFactory.createOrderPackagingCompletedEvent(orderId);
         eventPublisher.publishEvent(EventsConstants.ORDER_PACKAGED, event);
         
         return Optional.of(packagedOrdersRepository.save(packagedOrder));

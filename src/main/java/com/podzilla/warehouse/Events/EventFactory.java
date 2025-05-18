@@ -78,7 +78,7 @@ public class EventFactory {
      * @param orderId The order ID
      * @return A new OrderPackagingCompletedEvent instance
      */
-    public static OrderPackagedEvent createOrderPackagedEvent(
+    public static OrderPackagedEvent createOrderPackagingCompletedEvent(
             UUID orderId) {
         return new OrderPackagedEvent(orderId.toString());
     }
