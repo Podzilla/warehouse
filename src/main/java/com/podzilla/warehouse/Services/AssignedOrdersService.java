@@ -5,9 +5,10 @@ import com.podzilla.mq.EventsConstants;
 import com.podzilla.mq.events.OrderAssignedToCourierEvent;
 import com.podzilla.warehouse.Events.EventFactory;
 import com.podzilla.warehouse.Models.AssignedOrders;
+import com.podzilla.warehouse.Models.PackagedOrders;
 import com.podzilla.warehouse.Repositories.AssignedOrdersRepository;
+import com.podzilla.warehouse.Repositories.PackagedOrdersRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -27,6 +28,7 @@ public class AssignedOrdersService {
 
     @Autowired
     private AssignedOrdersRepository assignedOrdersRepository;
+    private PackagedOrdersRepository packagedOrdersRepository;
 
     @Cacheable(key = "'orderId:' + #orderId")
     public Optional<List<AssignedOrders>> findByOrderId(UUID orderId) {
@@ -45,13 +47,24 @@ public class AssignedOrdersService {
 
     @CachePut(key = "'orderId:' + #orderId")
     public AssignedOrders assignOrder(UUID orderId, UUID assignerId, UUID courierId) {
-        AssignedOrders assignment = new AssignedOrders(orderId, assignerId, courierId);
+        PackagedOrders packagedOrder = packagedOrdersRepository.findOneByOrderId(orderId).get();
+        AssignedOrders assignment = new AssignedOrders(orderId, assignerId, courierId, packagedOrder.getItems(),
+                packagedOrder.getDeliveryAddress(), packagedOrder.getTotalAmount(), packagedOrder.getOrderLatitude(),
+                packagedOrder.getOrderLongitude(), packagedOrder.getSignature(), packagedOrder.getConfirmationType());
         assignedOrdersRepository.save(assignment);
 
-        //TODO: after merge
-//        OrderAssignedToCourierEvent event = EventFactory.createOrderAssignedToCourierEvent(orderId, courierId);
-//
-//        eventPublisher.publishEvent(EventsConstants.ORDER_ASSIGNED_TO_COURIER, event);
+        OrderAssignedToCourierEvent event = 
+                EventFactory.createOrderAssignedToCourierEvent(
+                    orderId,
+                    courierId, 
+                    assignment.getTotalAmount(),
+                    assignment.getOrderLatitude(),
+                    assignment.getOrderLongitude(),
+                    assignment.getSignature(),
+                    assignment.getConfirmationType()
+                );
+
+        eventPublisher.publishEvent(EventsConstants.ORDER_ASSIGNED_TO_COURIER, event);
         return assignment;
     }
 
