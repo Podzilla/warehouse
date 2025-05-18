@@ -13,7 +13,7 @@ import java.util.*;
 
 @Slf4j
 @RestController
-@RequestMapping("warehouse/manager")
+@RequestMapping("/manager")
 public class ManagerController {
     @Autowired
     private ManagerService managerService;
