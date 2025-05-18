@@ -34,7 +34,9 @@ public class Stock {
 
     @Column(nullable = false)
     private String category;
-
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = true)
+    private PackagedOrders packagedOrder;
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
