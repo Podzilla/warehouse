@@ -1,5 +1,6 @@
 package com.podzilla.warehouse.Events;
 
+import com.podzilla.mq.events.InventoryUpdatedEvent;
 import com.podzilla.mq.events.OrderPlacedEvent;
 import com.podzilla.warehouse.Models.PackagedOrders;
 import com.podzilla.warehouse.Repositories.PackagedOrdersRepository;
@@ -18,7 +19,5 @@ public class OrderPlacedEventHandler implements EventHandler<OrderPlacedEvent> {
         //create packaged order
         PackagedOrders packagedOrder = new PackagedOrders(UUID.fromString(event.getOrderId()));
         packagedOrdersRepository.save(packagedOrder);
-        
-        //TODO: send inventory updated event
     }
 }

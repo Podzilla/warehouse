@@ -6,6 +6,7 @@ import com.podzilla.mq.events.OrderAssignedToCourierEvent;
 import com.podzilla.warehouse.Events.EventFactory;
 import com.podzilla.warehouse.Models.AssignedOrders;
 import com.podzilla.warehouse.Repositories.AssignedOrdersRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -19,19 +20,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 @CacheConfig(cacheNames = {"assignedOrders"})
 public class AssignedOrdersService {
     private final EventPublisher eventPublisher;
 
     @Autowired
     private AssignedOrdersRepository assignedOrdersRepository;
-
-//    @Autowired
-//    private RabbitTemplate rabbitTemplate;
-
-    public AssignedOrdersService(EventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
-    }
 
     @Cacheable(key = "'orderId:' + #orderId")
     public Optional<List<AssignedOrders>> findByOrderId(UUID orderId) {
@@ -53,12 +48,10 @@ public class AssignedOrdersService {
         AssignedOrders assignment = new AssignedOrders(orderId, assignerId, courierId);
         assignedOrdersRepository.save(assignment);
 
-        //TODO: create the event
+        //TODO: after merge
 //        OrderAssignedToCourierEvent event = EventFactory.createOrderAssignedToCourierEvent(orderId, courierId);
 //
 //        eventPublisher.publishEvent(EventsConstants.ORDER_ASSIGNED_TO_COURIER, event);
-
-//        rabbitTemplate.convertAndSend("analytics.exchange", "analytics.order.assigned", event);
         return assignment;
     }
 

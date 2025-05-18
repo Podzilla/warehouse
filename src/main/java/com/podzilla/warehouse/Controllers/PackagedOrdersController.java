@@ -46,8 +46,8 @@ public class PackagedOrdersController {
 
     //@PreAuthorize("hasRole('PACKAGER')")
     @PostMapping
-    public ResponseEntity<Optional<PackagedOrders>> packageOrder(@RequestParam UUID packagerId) {
-        Optional<PackagedOrders> packagedOrder = packagedOrdersService.packageOrder(packagerId);
+    public ResponseEntity<Optional<PackagedOrders>> packageOrder(@RequestParam UUID orderId, @RequestParam UUID packagerId) {
+        Optional<PackagedOrders> packagedOrder = packagedOrdersService.packageOrder(orderId, packagerId);
         return ResponseEntity.ok(packagedOrder);
     }
 }

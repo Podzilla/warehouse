@@ -6,6 +6,7 @@ import com.podzilla.mq.events.ProductCreatedEvent;
 import com.podzilla.warehouse.Events.EventFactory;
 import com.podzilla.warehouse.Models.Stock;
 import com.podzilla.warehouse.Repositories.StockRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,16 +19,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 @CacheConfig(cacheNames = {"stocks"})
 public class StockService {
     private final EventPublisher eventPublisher;
     
     @Autowired
     private StockRepository stockRepository;
-
-    public StockService(EventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
-    }
 
     @CachePut(value = "stocks", key = "#result.id")
     public Stock createStock(String name, Integer quantity, Integer threshold, String category, double cost) {
