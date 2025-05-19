@@ -34,7 +34,7 @@ public class OrderStockReservationEventHandler implements EventHandler<OrderStoc
 
                 String reason = "Not enough stock for product " + item.getProductId();
                 WarehouseOrderFulfillmentFailedEvent orderFulfillmentFailedEvent =
-                        EventFactory.createWarehouseOrderFulfillmentFailedEvent(item.getProductId(), reason);
+                        EventFactory.createWarehouseOrderFulfillmentFailedEvent(event.getOrderId(), reason);
                 eventPublisher.publishEvent(EventsConstants.WAREHOUSE_ORDER_FULFILLMENT_FAILED, orderFulfillmentFailedEvent);
 
                 break;
