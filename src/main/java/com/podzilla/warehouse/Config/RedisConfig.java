@@ -51,7 +51,7 @@ public class RedisConfig {
         serializer.setObjectMapper(mapper);
 
         return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(1))
+                .entryTtl(Duration.ofMinutes(1)) // Set TTL to 1 minute
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
     }
 }
