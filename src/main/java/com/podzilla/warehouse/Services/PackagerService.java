@@ -28,7 +28,6 @@ public class PackagerService {
         return packagerRepository.findById(id);
     }
 
-    @Cacheable(value = "allPackagers", key = "#pageable.pageNumber + '-' + #pageable.pageSize")
     public Page<Packager> getAllPackagers(Pageable pageable) {
         return packagerRepository.findAll(pageable);
     }
