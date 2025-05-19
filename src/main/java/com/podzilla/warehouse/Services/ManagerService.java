@@ -30,7 +30,6 @@ public class ManagerService {
         return managerRepository.save(manager);
     }
 
-    @Cacheable(key = "'all'")
     public List<Manager> getAllManagers() {
         return managerRepository.findAll();
     }
@@ -55,7 +54,6 @@ public class ManagerService {
         return managerRepository.findByEmail(email);
     }
 
-    @Cacheable(key = "'manager:department:' + #department")
     public List<Manager> getManagersByDepartment(String department) {
         return managerRepository.findByDepartment(department);
     }

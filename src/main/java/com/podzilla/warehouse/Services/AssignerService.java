@@ -23,7 +23,6 @@ public class AssignerService {
         return Optional.of(assignerRepository.save(assigner));
     }
 
-    @Cacheable(value = "assignersList")
     public Page<Assigner> getAllAssigners(Pageable pageable) {
         return assignerRepository.findAll(pageable);
     }

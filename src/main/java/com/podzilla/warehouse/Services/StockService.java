@@ -47,7 +47,6 @@ public class StockService {
         return saved;
     }
 
-    @Cacheable(value = "stocksAll")
     public List<Stock> getAllStocks() {
         return stockRepository.findAll();
     }
@@ -68,8 +67,6 @@ public class StockService {
     public List<Stock> getStocksBelowQuantity(Integer quantity) {
         return stockRepository.findByQuantityLessThanEqual(quantity);
     }
-
-    @Cacheable("stocksBelowThreshold")
 
     public List<Stock> getStocksBelowThreshold() {
         return stockRepository.findByQuantityLessThanOrEqualToThreshold();
@@ -110,7 +107,7 @@ public class StockService {
 //        return EventFactory.createInventorySnapshotEvent(LocalDateTime.now(), warehouseId, productSnapshots);
 //    }
 
-    @CacheEvict(value = {"stockById", "stocksAll", "stocksByName", "stocksBelowQuantity", "stocksBelowThreshold"}, key = "#id", allEntries = true)
+    @CacheEvict(value = {"stockById", "stocksByName", "stocksBelowQuantity"}, key = "#id", allEntries = true)
     public boolean deleteStock(UUID id) {
         if (stockRepository.existsById(id)) {
             stockRepository.deleteById(id);
