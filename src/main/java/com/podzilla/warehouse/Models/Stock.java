@@ -34,8 +34,14 @@ public class Stock {
 
     @Column(nullable = false)
     private String category;
+
+    // Add a new ManyToOne relationship back to AssignedOrders
     @ManyToOne
-    @JoinColumn(name = "order_id", nullable = true)
+    @JoinColumn(name = "assigned_order_id", nullable = true) // Use a different join column name
+    private AssignedOrders assignedOrder; // Use a different field name
+
+    @ManyToOne
+    @JoinColumn(name = "packaged_order_id", nullable = true)
     private PackagedOrders packagedOrder;
 
     // Add a new ManyToOne relationship back to AssignedOrders
