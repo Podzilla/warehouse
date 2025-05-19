@@ -96,7 +96,7 @@ public class StockService {
                             updated.getThreshold()
                     );
 
-                    eventPublisher.publishEvent(EventsConstants.PRODUCT_CREATED, event);
+                    eventPublisher.publishEvent(EventsConstants.INVENTORY_UPDATED, event);
 
                     return updated;
                 });
