@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("/assign")
+@RequestMapping("/api/assign")
 public class AssignerController {
 
     @Autowired

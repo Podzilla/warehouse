@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("warehouse/package")
+@RequestMapping("api/package")
 @Validated
 public class PackagedOrdersController {
 

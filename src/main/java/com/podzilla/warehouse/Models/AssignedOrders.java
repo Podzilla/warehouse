@@ -32,52 +32,17 @@ public class AssignedOrders {
     @CreationTimestamp
     private LocalDateTime assignedAt;
 
-    @Column(nullable = false)
-    @OneToMany(mappedBy = "packagedOrder")
-    private List<Stock> items;
-
-    @Column(nullable = false)
-    private DeliveryAddress deliveryAddress;
-    @Column(nullable = false)
-    private BigDecimal totalAmount;
-    @Column(nullable = false)
-    private double orderLatitude;
-    @Column(nullable = false)
-    private double orderLongitude;
-    @Column(nullable = false)
-    private String signature;
-    @Column(nullable = false)
-    private ConfirmationType confirmationType;
-
-    public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId, List<Stock> items,
-                         DeliveryAddress deliveryAddress, BigDecimal totalAmount, double orderLatitude,
-                         double orderLongitude, String signature, ConfirmationType confirmationType) {
+    public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId) {
         this.orderId = orderId;
         this.assignerId = assignerId;
         this.courierId = courierId;
         this.assignedAt = LocalDateTime.now();
-        this.items = items;
-        this.deliveryAddress = deliveryAddress;
-        this.totalAmount = totalAmount;
-        this.orderLatitude = orderLatitude;
-        this.orderLongitude = orderLongitude;
-        this.signature = signature;
-        this.confirmationType = confirmationType;
     }
     
-    public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId, LocalDateTime assignedAt,
-                         List<Stock> items, DeliveryAddress deliveryAddress, BigDecimal totalAmount,
-                         double orderLatitude, double orderLongitude, String signature, ConfirmationType confirmationType) {
+    public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId, LocalDateTime assignedAt) {
         this.orderId = orderId;
         this.assignerId = assignerId;
         this.courierId = courierId;
         this.assignedAt = assignedAt;
-        this.items = items;
-        this.deliveryAddress = deliveryAddress;
-        this.totalAmount = totalAmount;
-        this.orderLatitude = orderLatitude;
-        this.orderLongitude = orderLongitude;
-        this.signature = signature;
-        this.confirmationType = confirmationType;
     }
 }

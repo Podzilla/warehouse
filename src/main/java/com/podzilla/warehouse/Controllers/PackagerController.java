@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("warehouse/packagers")
+@RequestMapping("api/packagers")
 public class PackagerController {
 
     private final PackagerService packagerService;
