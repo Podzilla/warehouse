@@ -23,7 +23,6 @@ public class AssignerService {
         return Optional.of(assignerRepository.save(assigner));
     }
 
-    // We cache the page of assigners under a generic key (you could enhance this using pageable as a cache key input)
     @Cacheable(value = "assignersList")
     public Page<Assigner> getAllAssigners(Pageable pageable) {
         return assignerRepository.findAll(pageable);

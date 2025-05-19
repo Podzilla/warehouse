@@ -12,6 +12,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
 
+import java.time.Duration;
+
 @Configuration
 public class RedisConfig {
 
@@ -20,18 +22,15 @@ public class RedisConfig {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 
-        // Configure ObjectMapper
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        // Set the Jackson serializer with JavaTimeModule
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
         serializer.setObjectMapper(mapper);
 
-        // Apply to both keys and values
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(serializer);
         template.setHashKeySerializer(new StringRedisSerializer());
@@ -45,8 +44,6 @@ public class RedisConfig {
     public RedisCacheConfiguration cacheConfiguration() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
-
-        // Register JavaTimeModule for LocalDateTime support
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
@@ -54,9 +51,7 @@ public class RedisConfig {
         serializer.setObjectMapper(mapper);
 
         return RedisCacheConfiguration.defaultCacheConfig()
-                .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(serializer)
-                );
+                .entryTtl(Duration.ofMinutes(1))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
     }
-
 }
