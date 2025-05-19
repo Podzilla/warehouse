@@ -33,7 +33,7 @@ public class AssignedOrders {
     private LocalDateTime assignedAt;
 
     @Column(nullable = false)
-    @OneToMany(mappedBy = "packagedOrder")
+    @OneToMany(mappedBy = "assignedOrder")
     private List<Stock> items;
 
     @Column(nullable = false)
