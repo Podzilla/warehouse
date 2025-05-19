@@ -131,7 +131,7 @@
         <dependency>
             <groupId>com.github.Podzilla</groupId>
             <artifactId>podzilla-utils-lib</artifactId>
-            <version>v1.1.11</version>
+            <version>v1.1.13</version>
         </dependency>
     </dependencies>
 
