@@ -14,4 +14,6 @@ public interface AssignedOrdersRepository extends JpaRepository<AssignedOrders, 
     List<AssignedOrders> findByAssignerId(UUID assignerId);
 
     List<AssignedOrders> findByOrderId(UUID orderId);
+
+    AssignedOrders findOneByOrderId(UUID orderId);
 }

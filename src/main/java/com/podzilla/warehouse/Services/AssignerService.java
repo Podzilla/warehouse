@@ -18,7 +18,7 @@ public class AssignerService {
     @Autowired
     private AssignerRepository assignerRepository;
 
-    @CachePut(key = "#result.get().id", condition = "#result.isPresent()")
+    // @CachePut(key = "#result.get().id", condition = "#result.isPresent()")
     public Optional<Assigner> createAssigner(Assigner assigner) {
         return Optional.of(assignerRepository.save(assigner));
     }

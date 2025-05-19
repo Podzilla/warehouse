@@ -3,9 +3,10 @@ package com.podzilla.warehouse.Models;
 import com.podzilla.mq.events.ConfirmationType;
 import com.podzilla.mq.events.DeliveryAddress;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -13,30 +14,30 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Setter
-@Getter
+@Data
 @Entity
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table()
 public class PackagedOrders {
     @Id
     private UUID orderId;
     private UUID packagerId;
-    @Column(nullable = false)
-    @OneToMany(mappedBy = "packagedOrder")
+    @OneToMany(mappedBy = "packagedOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stock> items;
 
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private DeliveryAddress deliveryAddress;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private BigDecimal totalAmount;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private double orderLatitude;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private double orderLongitude;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private String signature;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private ConfirmationType confirmationType;
 
     @CreationTimestamp
