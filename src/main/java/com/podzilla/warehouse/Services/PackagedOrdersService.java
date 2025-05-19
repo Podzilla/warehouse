@@ -4,7 +4,9 @@ import com.podzilla.mq.EventPublisher;
 import com.podzilla.mq.EventsConstants;
 import com.podzilla.mq.events.OrderPackagedEvent;
 import com.podzilla.warehouse.Events.EventFactory;
+import com.podzilla.warehouse.Models.AssignedOrders;
 import com.podzilla.warehouse.Models.PackagedOrders;
+import com.podzilla.warehouse.Repositories.AssignedOrdersRepository;
 import com.podzilla.warehouse.Repositories.PackagedOrdersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,9 @@ import org.springframework.cache.annotation.CacheEvict;
 public class PackagedOrdersService {
     private final EventPublisher eventPublisher;
     @Autowired
-    private PackagedOrdersRepository packagedOrdersRepository;
+    private final PackagedOrdersRepository packagedOrdersRepository;
+
+    private final AssignedOrdersRepository assignedOrdersRepository;
 
     @Cacheable(value = "packagedOrdersByOrderId", key = "#orderId.toString() + '-' + #pageable.pageNumber + '-' + #pageable.pageSize")
     public Page<PackagedOrders> findByOrderId(UUID orderId, Pageable pageable) {
@@ -45,10 +49,23 @@ public class PackagedOrdersService {
 
     @CachePut(value = "packagedOrdersByPackagerId", key = "#packagerId.toString() + '-0-10'")
     public Optional<PackagedOrders> packageOrder(UUID orderId,UUID packagerId) {
-        PackagedOrders packagedOrder = new PackagedOrders(orderId, packagerId, LocalDateTime.now());
-
+        PackagedOrders packagedOrder = packagedOrdersRepository.findOneByOrderId(orderId).get();
+        packagedOrder.setPackagerId(packagerId);
         OrderPackagedEvent event = EventFactory.createOrderPackagedEvent(orderId);
         eventPublisher.publishEvent(EventsConstants.ORDER_PACKAGED, event);
+
+        AssignedOrders assignment = AssignedOrders.builder()
+                .orderId(orderId)
+                .items(packagedOrder.getItems())
+                .deliveryAddress(packagedOrder.getDeliveryAddress())
+                .totalAmount(packagedOrder.getTotalAmount())
+                .orderLatitude(packagedOrder.getOrderLatitude())
+                .orderLongitude(packagedOrder.getOrderLongitude())
+                .confirmationType(packagedOrder.getConfirmationType())
+                .signature(packagedOrder.getSignature())
+                .build();
+
+        assignedOrdersRepository.save(assignment);
 
         return Optional.of(packagedOrdersRepository.save(packagedOrder));
     }

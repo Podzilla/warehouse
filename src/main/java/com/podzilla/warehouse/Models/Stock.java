@@ -37,6 +37,12 @@ public class Stock {
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = true)
     private PackagedOrders packagedOrder;
+
+    // Add a new ManyToOne relationship back to AssignedOrders
+    @ManyToOne
+    @JoinColumn(name = "assigned_order_id", nullable = true) // Use a different join column name
+    private AssignedOrders assignedOrder; // Use a different field name
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;

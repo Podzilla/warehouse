@@ -22,6 +22,7 @@ public class OrderStockReservationEventHandler implements EventHandler<OrderStoc
 
     @Override
     public void handle(OrderStockReservationRequestedEvent event) {
+        System.err.println("Received OrderStockReservationRequestedEvent: " + event);
         boolean allAvailable = true;
 
         // Check if all items are available in stock

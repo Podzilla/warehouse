@@ -3,6 +3,7 @@ package com.podzilla.warehouse.Models;
 import com.podzilla.mq.events.ConfirmationType;
 import com.podzilla.mq.events.DeliveryAddress;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Getter
+@Builder
 @Table(name = "Assignments")
 public class AssignedOrders {
     @Id
@@ -32,21 +34,20 @@ public class AssignedOrders {
     @CreationTimestamp
     private LocalDateTime assignedAt;
 
-    @Column(nullable = false)
-    @OneToMany(mappedBy = "packagedOrder")
+    @OneToMany(mappedBy = "assignedOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stock> items;
 
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private DeliveryAddress deliveryAddress;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private BigDecimal totalAmount;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private double orderLatitude;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private double orderLongitude;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private String signature;
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private ConfirmationType confirmationType;
 
     public AssignedOrders(UUID orderId, UUID assignerId, UUID courierId, List<Stock> items,

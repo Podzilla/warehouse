@@ -65,3 +65,7 @@ spring:
 appconfig:
   cache:
     enabled: true
+
+server:
+  servlet:
+    context-path: /api
