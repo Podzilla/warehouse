@@ -62,8 +62,6 @@ public class StockService {
         return stockRepository.findByName(name);
     }
 
-    @Cacheable(value = "stocksBelowQuantity", key = "#quantity")
-
     public List<Stock> getStocksBelowQuantity(Integer quantity) {
         return stockRepository.findByQuantityLessThanEqual(quantity);
     }
