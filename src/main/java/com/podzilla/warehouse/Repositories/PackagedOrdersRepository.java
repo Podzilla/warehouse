@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -13,4 +14,5 @@ public interface PackagedOrdersRepository extends JpaRepository<PackagedOrders, 
     Page<PackagedOrders> findByPackagerIdIsNull(Pageable pageable);
     Page<PackagedOrders> findByPackagerId(UUID packagerId, Pageable pageable);
     Page<PackagedOrders> findByOrderId(UUID orderId, Pageable pageable);
+    Optional<PackagedOrders> findOneByOrderId(UUID orderId);
 }

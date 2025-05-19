@@ -78,7 +78,7 @@ public class EventFactory {
      * @param orderId The order ID
      * @return A new OrderPackagingCompletedEvent instance
      */
-    public static OrderPackagedEvent createOrderPackagingCompletedEvent(
+    public static OrderPackagedEvent createOrderPackagedEvent(
             UUID orderId) {
         return new OrderPackagedEvent(orderId.toString());
     }
@@ -93,16 +93,15 @@ public class EventFactory {
     public static OrderAssignedToCourierEvent createOrderAssignedToCourierEvent(
             UUID orderId,
             UUID courierId,
-            double totalAmount,
+            BigDecimal totalAmount,
             double orderLatitude,
             double orderLongitude,
             String signature,
             ConfirmationType confirmationType) {
-        BigDecimal totalAmountBigDecimal = BigDecimal.valueOf(totalAmount);
         return new OrderAssignedToCourierEvent(
                 orderId.toString(),
                 courierId.toString(),
-                totalAmountBigDecimal,
+                totalAmount,
                 orderLatitude,
                 orderLongitude,
                 signature,
