@@ -62,15 +62,6 @@ docker-compose up -d
 
 The service will be available at `http://localhost:8080` (or the port configured in `docker-compose.yml` or your environment).
 
-#### Locally (without Docker)
-
-It is also possible to run the service locally without Docker. However, this requires you to set up and configure PostgreSQL, RabbitMQ, and Redis servers separately. You will need to update the connection details for these services in the `src/main/resources/application.yml` file.
-
-Once the external services are running and configured, you can start the application using the following Maven command:
-
-```bash
-./mvnw spring-boot:run
-```
 
 ## Project Structure
 
